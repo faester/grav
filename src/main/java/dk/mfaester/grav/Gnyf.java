@@ -7,9 +7,9 @@ public class Gnyf extends AbstractDrawable {
     public float[] getVertices() {
         float[] vertices = {
                 // Left bottom triangle
-                -0.5f, 0.5f, 0f,
-                -0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f,
+                -0.5f, 0.5f, 0f, 1f,
+                -0.5f, -0.5f, 0f, 1f,
+                0.5f, -0.5f, 0f, 1f,
         };
         return vertices;
     }

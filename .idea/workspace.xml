@@ -85,7 +85,7 @@
       <file leaf-file-name="Program.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Program.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="10" selection-start="1545" selection-end="1545" vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="2618">
+            <state line="98" column="23" selection-start="2840" selection-end="2840" vertical-scroll-proportion="0.0" vertical-offset="1649" max-vertical-offset="2618">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -102,13 +102,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Gnyf.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Gnyf.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnyf.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="103" selection-end="103" vertical-scroll-proportion="0.17857143" vertical-offset="0" max-vertical-offset="544">
+            <state line="12" column="10" selection-start="343" selection-end="343" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
               <folding>
-                <element signature="e#414#415#0" expanded="true" />
-                <element signature="e#454#455#0" expanded="true" />
+                <element signature="e#426#427#0" expanded="true" />
+                <element signature="e#466#467#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Box.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Box.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="10" selection-start="911" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="1003">
+              <folding>
+                <element signature="e#994#995#0" expanded="true" />
+                <element signature="e#1034#1035#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -117,8 +129,21 @@
       <file leaf-file-name="Gnaf.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnaf.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="17" selection-start="519" selection-end="519" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="510">
+            <state line="27" column="0" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="527">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ShaderProgram.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/ShaderProgram.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="0" selection-start="174" selection-end="174" vertical-scroll-proportion="0.33626375" vertical-offset="0" max-vertical-offset="969">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#261#262#0" expanded="true" />
+                <element signature="e#297#298#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -126,7 +151,7 @@
       <file leaf-file-name="DrawableToOpenGlVaoBinder.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/DrawableToOpenGlVaoBinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="38" selection-start="221" selection-end="246" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
+            <state line="34" column="39" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="969">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -160,11 +185,13 @@
         <option value="$PROJECT_DIR$/src/test/java/dk/mfaester/grav/EquilibratorTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/TheQuadExampleDrawArrays.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/DrawableToOpenGlVaoBinder.java" />
         <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Drawable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Box.java" />
         <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnyf.java" />
         <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Program.java" />
+        <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/DrawableToOpenGlVaoBinder.java" />
         <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnaf.java" />
+        <option value="$PROJECT_DIR$/src/main/java/dk/mfaester/grav/ShaderProgram.java" />
       </list>
     </option>
   </component>
@@ -297,8 +324,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -764,22 +791,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/lwjgl/lwjgl/lwjgl/2.8.2/lwjgl-2.8.2.jar!/org/lwjgl/opengl/GL20.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="353" column="84" selection-start="17144" selection-end="17144" vertical-scroll-proportion="0.22580644" vertical-offset="5830" max-vertical-offset="7327">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/DrawableToOpenGlVaoBinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="38" selection-start="221" selection-end="246" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Drawable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="27" selection-start="319" selection-end="319" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="442">
@@ -787,9 +798,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Box.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="10" selection-start="911" selection-end="911" vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="1003">
+          <folding>
+            <element signature="e#994#995#0" expanded="true" />
+            <element signature="e#1034#1035#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnyf.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="10" selection-start="343" selection-end="343" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
+          <folding>
+            <element signature="e#426#427#0" expanded="true" />
+            <element signature="e#466#467#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Program.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="10" selection-start="1545" selection-end="1545" vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="2618">
+        <state line="98" column="23" selection-start="2840" selection-end="2840" vertical-scroll-proportion="0.0" vertical-offset="1649" max-vertical-offset="2618">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/lwjgl/lwjgl/lwjgl/2.8.2/lwjgl-2.8.2.jar!/org/lwjgl/opengl/GL20.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="353" column="23" selection-start="17083" selection-end="17083" vertical-scroll-proportion="0.352518" vertical-offset="5837" max-vertical-offset="7327">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/DrawableToOpenGlVaoBinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="39" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="969">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -798,17 +845,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnaf.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="17" selection-start="519" selection-end="519" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="510">
+        <state line="27" column="0" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="527">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/Gnyf.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/dk/mfaester/grav/ShaderProgram.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="103" selection-end="103" vertical-scroll-proportion="0.17857143" vertical-offset="0" max-vertical-offset="544">
+        <state line="9" column="0" selection-start="174" selection-end="174" vertical-scroll-proportion="0.33626375" vertical-offset="0" max-vertical-offset="969">
           <folding>
-            <element signature="e#414#415#0" expanded="true" />
-            <element signature="e#454#455#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#261#262#0" expanded="true" />
+            <element signature="e#297#298#0" expanded="true" />
           </folding>
         </state>
       </provider>

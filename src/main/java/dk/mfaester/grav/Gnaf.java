@@ -7,9 +7,9 @@ public class Gnaf extends AbstractDrawable {
     public float[] getVertices() {
         float[] vertices = {
                 // Right top triangle
-                0.5f, -0.5f, 0f,
-                0.5f, 0.5f, 0f,
-                -0.5f, 0.5f, 0f
+                0.5f, -0.5f, 0f, 1f,
+                0.5f, 0.5f, 0f, 1f,
+                -0.5f, 0.5f, 0f, 1f,
         };
         return vertices;
     }
@@ -24,3 +24,4 @@ public class Gnaf extends AbstractDrawable {
         return 3;
     }
 }
+
