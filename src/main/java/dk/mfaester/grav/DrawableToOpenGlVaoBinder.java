@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class DrawableToOpenGlVaoBinder
 {
@@ -25,8 +26,8 @@ public class DrawableToOpenGlVaoBinder
     }
 
     private void bindIndices(Drawable drawable) {
-        byte[] indices = drawable.getIndices();
-        ByteBuffer indicesBuffer = BufferUtils.createByteBuffer(indices.length);
+        int[] indices = drawable.getIndices();
+        IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
         indicesBuffer.put(indices);
         indicesBuffer.flip();
 

@@ -10,13 +10,13 @@ public abstract class AbstractDrawable implements Drawable {
     private int openGlVaoId;
 
     final float[] vertices = createVertices();
-    final byte[] indices = createIndices();
+    final int[] indices = createIndices();
     private int vertexBufferObjectId;
     private int vertexBufferObjectIndexId;
 
     protected abstract float[] createVertices();
 
-    protected abstract byte[] createIndices();
+    protected abstract int[] createIndices();
 
     @Override
     public boolean hasBeenSent() {
@@ -34,7 +34,7 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public byte[] getIndices() {
+    public int[] getIndices() {
         return this.indices;
     }
 

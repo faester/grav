@@ -22,8 +22,8 @@ public class Gnaf extends AbstractDrawable {
     }
 
     @Override
-    protected byte[] createIndices() {
-        final byte[] indices = {
+    protected int[] createIndices() {
+        final int[] indices = {
                 0, 1, 2,
         };
         return indices;

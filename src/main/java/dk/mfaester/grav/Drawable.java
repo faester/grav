@@ -32,7 +32,7 @@ public interface Drawable {
      * Gets the indices for the vertices to set.
      * @return
      */
-    byte[] getIndices();
+    int[] getIndices();
 
     int getGlVerticeFormat();
 

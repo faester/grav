@@ -115,7 +115,7 @@ public class Program {
             // Bind to element index array
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
             // Draw the vertices
-            GL11.glDrawElements(drawable.getGlVerticeFormat(), drawable.getIndexCount(), GL11.GL_UNSIGNED_BYTE, 0);
+            GL11.glDrawElements(drawable.getGlVerticeFormat(), drawable.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 
             // Put everything back to default (deselect)
             GL20.glDisableVertexAttribArray(0);
