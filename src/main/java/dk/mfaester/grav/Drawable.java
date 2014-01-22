@@ -1,6 +1,5 @@
 package dk.mfaester.grav;
 
-import com.sun.javafx.geom.Vec4f;
 import org.lwjgl.util.vector.Vector4f;
 
 /**
