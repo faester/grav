@@ -5,26 +5,28 @@ import org.lwjgl.opengl.GL20;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 
 public class Shader {
     int shaderID = 0;
+    final private List<String> inputAttributes = new Vector<String>();
 
-    private Shader(){
+    private Shader() {
     }
 
-    public int getShaderID(){
+    public int getShaderID() {
         return this.shaderID;
     }
 
-    public static Shader loadVertexShader(String filename){
+    public static Shader loadVertexShader(String filename) {
         Shader shaderProgram = new Shader();
-        shaderProgram .loadShader(filename, GL20.GL_VERTEX_SHADER);
+        shaderProgram.loadShader(filename, GL20.GL_VERTEX_SHADER);
         return shaderProgram;
     }
 
-    public static Shader loadFragmentShader(String filename){
+    public static Shader loadFragmentShader(String filename) {
         Shader shaderProgram = new Shader();
-        shaderProgram .loadShader(filename, GL20.GL_FRAGMENT_SHADER);
+        shaderProgram.loadShader(filename, GL20.GL_FRAGMENT_SHADER);
         return shaderProgram;
     }
 
@@ -47,5 +49,13 @@ public class Shader {
         shaderID = GL20.glCreateShader(type);
         GL20.glShaderSource(shaderID, shaderSource);
         GL20.glCompileShader(shaderID);
+    }
+
+    public Iterable<String> getInputAttributes() {
+        return inputAttributes;
+    }
+
+    public void addInputAttribute(String attributeName) {
+        inputAttributes.add(attributeName);
     }
 }

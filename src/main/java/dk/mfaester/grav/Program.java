@@ -13,6 +13,8 @@ import org.lwjgl.util.glu.GLU;
 
 
 public class Program {
+    private ShaderProgram shaderProgram;
+
     // Entry point for the application
     public static void main(String[] args) {
         new Program();
@@ -50,8 +52,14 @@ public class Program {
     }
 
     private void loadShaders() {
-//        Shader fragmentShader = Shader.loadFragmentShader("fragment.glsl");
-//        Shader vertexShader = Shader.loadVertexShader("vertex.glsl");
+        Shader fragmentShader = Shader.loadFragmentShader("fragment.glsl");
+        Shader vertexShader = Shader.loadVertexShader("vertex.glsl");
+        vertexShader.addInputAttribute("in_Position");
+        vertexShader.addInputAttribute("in_Color");
+        this.shaderProgram = new ShaderProgram();
+        this.shaderProgram.AttachShader(vertexShader);
+        this.shaderProgram.AttachShader(fragmentShader);
+        this.shaderProgram.LinkAndValidateProgram();
     }
 
     private Drawable[] CreateDrawables() {
