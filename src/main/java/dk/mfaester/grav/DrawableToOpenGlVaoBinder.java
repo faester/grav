@@ -18,12 +18,19 @@ public class DrawableToOpenGlVaoBinder
         prepareVerticeArrayObject(drawable);
         bindVerticeArrayObject(drawable);
 
+        validate(drawable);
         bindVertices(drawable);
         bindColors(drawable);
         bindIndices(drawable);
 
         releaseVerticeArrayObject();
         drawable.setHasBeenSent(true);
+    }
+
+    private void validate(Drawable drawable) {
+        if (drawable.getColors().length != drawable.getVertices().length) {
+            throw new IllegalArgumentException("The drawable has a different number of colors than vertices.");
+        }
     }
 
     private void bindColors(Drawable drawable) {
