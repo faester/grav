@@ -1,6 +1,11 @@
-varying vec4 vertColor;
+#version 150 core
 
-void main(){
-    gl_Position = gl_ModelViewProjectionMatrix*gl_Vertex;
-    vertColor = vec4(0.6, 0.3, 0.4, 1.0);
+in vec4 in_Position;
+in vec4 in_Color;
+
+out vec4 pass_Color;
+
+void main(void) {
+	gl_Position = in_Position;
+	pass_Color = in_Color;
 }

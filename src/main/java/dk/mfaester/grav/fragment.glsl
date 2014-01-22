@@ -1,5 +1,9 @@
-varying vec4 vertColor;
+#version 150 core
 
-void main(){
-    gl_FragColor = vertColor;
+in vec4 pass_Color;
+
+out vec4 out_Color;
+
+void main(void) {
+	out_Color = pass_Color;
 }
