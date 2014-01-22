@@ -114,12 +114,14 @@ public class Program {
 
     public void loopCycle(Drawable[] drawables) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-//        GL11.glLoadIdentity();
+
+        GL20.glUseProgram(this.shaderProgram.getGlProgramId());
 
         for (Drawable drawable : drawables) {
             // Bind to the VAO that has all the information about the quad vertices
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
+            GL20.glEnableVertexAttribArray(1);
 
             // Bind to element index array
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
@@ -127,9 +129,13 @@ public class Program {
             GL11.glDrawElements(drawable.getGlVerticeFormat(), drawable.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 
             // Put everything back to default (deselect)
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
             GL20.glDisableVertexAttribArray(0);
+            GL20.glDisableVertexAttribArray(1);
             GL30.glBindVertexArray(0);
         }
+
+        GL20.glUseProgram(0);
         this.exitOnGLError("Error in loopCycle");
     }
 

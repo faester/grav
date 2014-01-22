@@ -14,11 +14,21 @@ public class Gnyf extends AbstractDrawable {
     protected float[] createVertices() {
         final float[] vertices = {
                 // Left bottom triangle
-                -0.5f, 0.5f, 0f,
-                -0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f,
+                -0.5f, 0.5f, 0f, 1f,
+                -0.5f, -0.5f, 0f, 1f,
+                0.5f, -0.5f, 0f, 1f,
         };
         return vertices;
+    }
+
+    @Override
+    protected float[] createColors() {
+        final float[] colors = {
+                1f, 0f, 0f, 1f,
+                0f, 1f, 0f, 1f,
+                0f, 0f, 1f, 1f,
+        };
+        return colors;
     }
 
     @Override

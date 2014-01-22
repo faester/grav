@@ -19,10 +19,23 @@ public class DrawableToOpenGlVaoBinder
         bindVerticeArrayObject(drawable);
 
         bindVertices(drawable);
+        bindColors(drawable);
         bindIndices(drawable);
 
         releaseVerticeArrayObject();
         drawable.setHasBeenSent(true);
+    }
+
+    private void bindColors(Drawable drawable) {
+        float[] colors = drawable.getColors();
+        FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.length);
+        colorBuffer.put(colors);
+        colorBuffer.flip();
+        int vboColorId = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboColorId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
     private void bindIndices(Drawable drawable) {
@@ -52,7 +65,7 @@ public class DrawableToOpenGlVaoBinder
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertextBufferObjectId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
         // Put the VBO in the attributes list at index 0
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
         // Deselect (bind to 0) the VBO
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         drawable.setVertexBufferObjectId(vertextBufferObjectId);

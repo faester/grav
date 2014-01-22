@@ -9,8 +9,11 @@ public abstract class AbstractDrawable implements Drawable {
     private boolean hasBeenSent;
     private int openGlVaoId;
 
-    final float[] vertices = createVertices();
-    final int[] indices = createIndices();
+    private final float[] vertices = createVertices();
+    private final float[] colors = createColors();
+    private final int[] indices = createIndices();
+
+    protected abstract float[] createColors();
     private int vertexBufferObjectId;
     private int vertexBufferObjectIndexId;
 
@@ -26,6 +29,11 @@ public abstract class AbstractDrawable implements Drawable {
     @Override
     public void setHasBeenSent(boolean value) {
         hasBeenSent = value;
+    }
+
+    @Override
+    public float[] getColors() {
+        return this.colors;
     }
 
     @Override

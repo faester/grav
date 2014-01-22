@@ -27,6 +27,8 @@ public interface Drawable {
      */
     float[] getVertices();
 
+    float[] getColors();
+
     /**
      * Gets the indices for the vertices to set.
      * @return

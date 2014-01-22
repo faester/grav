@@ -16,13 +16,27 @@ public class Box extends AbstractDrawable {
         final float x = .25f, y = .25f, z = .25f;
 
         final float[] vertices = {
-                -x, -y, -z,
-                -x, +y, -z,
-                +x, +y, -z,
-                +x, -y, -z,
+                -x, -y, -z, 1f,
+                -x, +y, -z, 1f,
+                +x, +y, -z, 1f,
+                +x, -y, -z, 1f,
         };
         return vertices;
     }
+
+    @Override
+    protected float[] createColors() {
+        float c = 0.8f;
+        final float[] vertices = {
+                0.5f, 0.5f, 0.5f, 1f,
+                0.5f, 1f, 0.5f, 1f,
+                1f, 1f, 0.5f, 1f,
+                1f, 0.5f, 0.5f, 1f,
+        };
+        return vertices;
+    }
+
+
 
     @Override
     protected int[] createIndices() {
