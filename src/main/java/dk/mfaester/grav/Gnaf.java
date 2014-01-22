@@ -1,27 +1,32 @@
 package dk.mfaester.grav;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector4f;
 
 public class Gnaf extends AbstractDrawable {
+    final Vector4f color = new Vector4f(0.8f, 0f, 0f, 0.5f);
+
     @Override
-    public float[] getVertices() {
-        float[] vertices = {
-                // Right top triangle
-                0.5f, -0.5f, 0f, 1f,
-                0.5f, 0.5f, 0f, 1f,
-                -0.5f, 0.5f, 0f, 1f,
+    public Vector4f getColor() {
+        return color;
+    }
+
+    @Override
+    protected float[] createVertices() {
+        final float[] vertices = {
+                0.5f, -0.5f, 0f,
+                0.5f, 0.5f, 0f,
+                -0.5f, 0.5f, 0f,
         };
         return vertices;
     }
 
     @Override
-    public int getGlVerticeFormat() {
-        return GL11.GL_TRIANGLES;
-    }
-
-    @Override
-    public int getGlVertexCount() {
-        return 3;
+    protected byte[] createIndices() {
+        final byte[] indices = {
+                0, 1, 2,
+        };
+        return indices;
     }
 }
 

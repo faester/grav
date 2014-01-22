@@ -1,8 +1,5 @@
 package dk.mfaester.grav;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
@@ -25,23 +22,22 @@ public class Program {
     private final String WINDOW_TITLE = "The Quad: glDrawArrays";
     private final int WIDTH = 800;
     private final int HEIGHT = 800;
-    // Quad variables
-    private int vaoId = 0;
-    private int vboId = 0;
 
-    private Drawable[] _drawables;
+    private Drawable[] drawables;
 
     public Program() {
         // Initialize OpenGL (Display)
         this.setupOpenGL();
 
-        this._drawables = CreateDrawables();
+        this.loadShaders();
 
-        this.setupQuad(_drawables);
+        this.drawables = CreateDrawables();
+
+        this.bindDrawables(drawables);
 
         while (!Display.isCloseRequested()) {
             // Do a single loop (logic/render)
-            this.loopCycle(this._drawables);
+            this.loopCycle(this.drawables);
 
             // Force a maximum FPS of about 60
             Display.sync(60);
@@ -50,13 +46,18 @@ public class Program {
         }
 
         // Destroy OpenGL (Display)
-        this.destroyOpenGL();
+        this.destroyOpenGL(drawables);
+    }
+
+    private void loadShaders() {
+//        ShaderProgram fragmentShader = ShaderProgram.loadFragmentShader("screen.frag");
+//        ShaderProgram vertexShader = ShaderProgram.loadVertexShader("screen.vert");
     }
 
     private Drawable[] CreateDrawables() {
         Drawable[] drawables = {
-            new Gnyf(),
-            new Gnaf(),
+                new Gnyf(),
+                new Gnaf(),
         };
 
         return drawables;
@@ -90,28 +91,31 @@ public class Program {
         this.exitOnGLError("Error in setupOpenGL");
     }
 
-    public void setupQuad(Drawable[] drawables) {
+    public void bindDrawables(Drawable[] drawables) {
         // Sending data to OpenGL requires the usage of (flipped) byte buffers
 
         DrawableToOpenGlVaoBinder binder = new DrawableToOpenGlVaoBinder();
 
-        for(Drawable drawable : drawables ){
+        for (Drawable drawable : drawables) {
             binder.Bind(drawable);
         }
 
-        this.exitOnGLError("Error in setupQuad");
+        this.exitOnGLError("Error in bindDrawables");
     }
 
     public void loopCycle(Drawable[] drawables) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+//        GL11.glLoadIdentity();
 
-        for(Drawable drawable : drawables){
+        for (Drawable drawable : drawables) {
             // Bind to the VAO that has all the information about the quad vertices
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
 
+            // Bind to element index array
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
             // Draw the vertices
-            GL11.glDrawArrays(drawable.getGlVerticeFormat(), 0, drawable.getGlVertexCount());
+            GL11.glDrawElements(drawable.getGlVerticeFormat(), drawable.getIndexCount(), GL11.GL_UNSIGNED_BYTE, 0);
 
             // Put everything back to default (deselect)
             GL20.glDisableVertexAttribArray(0);
@@ -120,17 +124,22 @@ public class Program {
         this.exitOnGLError("Error in loopCycle");
     }
 
-    public void destroyOpenGL() {
+    public void destroyOpenGL(Drawable[] drawables) {
         // Disable the VBO index from the VAO attributes list
         GL20.glDisableVertexAttribArray(0);
 
-        // Delete the VBO
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        GL15.glDeleteBuffers(vboId);
+        for(Drawable drawable : drawables){
+            // Delete the VBO
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+            GL15.glDeleteBuffers(drawable.getVertexBufferObjectId());
 
-        // Delete the VAO
-        GL30.glBindVertexArray(0);
-        GL30.glDeleteVertexArrays(vaoId);
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+            GL15.glDeleteBuffers(drawable.getVertexIndexBufferObjectId());
+
+            // Delete the VAO
+            GL30.glBindVertexArray(0);
+            GL30.glDeleteVertexArrays(drawable.getOpenGLVaoId());
+        }
 
         Display.destroy();
     }

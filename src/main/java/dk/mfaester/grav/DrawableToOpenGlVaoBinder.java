@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class DrawableToOpenGlVaoBinder
@@ -14,27 +15,46 @@ public class DrawableToOpenGlVaoBinder
         if (drawable.hasBeenSent()) { return; }
 
         prepareVerticeArrayObject(drawable);
-
         bindVerticeArrayObject(drawable);
 
-        bindVectors(drawable);
+        bindVertices(drawable);
+        bindIndices(drawable);
 
         releaseVerticeArrayObject();
         drawable.setHasBeenSent(true);
     }
 
-    private void bindVectors(Drawable drawable) {
+    private void bindIndices(Drawable drawable) {
+        byte[] indices = drawable.getIndices();
+        ByteBuffer indicesBuffer = BufferUtils.createByteBuffer(indices.length);
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        // Create a new VBO for the indices and select it (bind)
+        int vboiId = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboiId);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
+
+        // Deselect the VBO.
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+        drawable.setVertexIndexBufferObjectId(vboiId);
+
+    }
+
+    private void bindVertices(Drawable drawable) {
         float[] vertices = drawable.getVertices();
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices);
         verticesBuffer.flip();
-        int vboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
+
+        int vertextBufferObjectId = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertextBufferObjectId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
         // Put the VBO in the attributes list at index 0
-        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
         // Deselect (bind to 0) the VBO
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        drawable.setVertexBufferObjectId(vertextBufferObjectId);
     }
 
     private void prepareVerticeArrayObject(Drawable drawable) {
