@@ -50,14 +50,15 @@ public class Program {
     }
 
     private void loadShaders() {
-//        ShaderProgram fragmentShader = ShaderProgram.loadFragmentShader("screen.frag");
-//        ShaderProgram vertexShader = ShaderProgram.loadVertexShader("screen.vert");
+//        ShaderProgram fragmentShader = ShaderProgram.loadFragmentShader("fragment.glsl");
+//        ShaderProgram vertexShader = ShaderProgram.loadVertexShader("vertex.glsl");
     }
 
     private Drawable[] CreateDrawables() {
         Drawable[] drawables = {
                 new Gnyf(),
                 new Gnaf(),
+                new Box(),
         };
 
         return drawables;
