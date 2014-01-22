@@ -50,8 +50,8 @@ public class Program {
     }
 
     private void loadShaders() {
-//        ShaderProgram fragmentShader = ShaderProgram.loadFragmentShader("fragment.glsl");
-//        ShaderProgram vertexShader = ShaderProgram.loadVertexShader("vertex.glsl");
+//        Shader fragmentShader = Shader.loadFragmentShader("fragment.glsl");
+//        Shader vertexShader = Shader.loadVertexShader("vertex.glsl");
     }
 
     private Drawable[] CreateDrawables() {

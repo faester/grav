@@ -6,24 +6,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ShaderProgram {
+public class Shader {
     int shaderID = 0;
 
-    private ShaderProgram(){
+    private Shader(){
     }
 
     public int getShaderID(){
         return this.shaderID;
     }
 
-    public static ShaderProgram loadVertexShader(String filename){
-        ShaderProgram  shaderProgram = new ShaderProgram();
+    public static Shader loadVertexShader(String filename){
+        Shader shaderProgram = new Shader();
         shaderProgram .loadShader(filename, GL20.GL_VERTEX_SHADER);
         return shaderProgram;
     }
 
-    public static  ShaderProgram loadFragmentShader(String filename){
-        ShaderProgram  shaderProgram = new ShaderProgram();
+    public static Shader loadFragmentShader(String filename){
+        Shader shaderProgram = new Shader();
         shaderProgram .loadShader(filename, GL20.GL_FRAGMENT_SHADER);
         return shaderProgram;
     }
