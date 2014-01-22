@@ -52,8 +52,8 @@ public class Program {
     }
 
     private void loadShaders() {
-        Shader fragmentShader = Shader.loadFragmentShader("fragment.glsl");
-        Shader vertexShader = Shader.loadVertexShader("vertex.glsl");
+        Shader fragmentShader = Shader.loadFragmentShader("C:/workdirs/grav/src/main/resources/fragment.glsl");
+        Shader vertexShader = Shader.loadVertexShader("C:/workdirs/grav/src/main/resources/vertex.glsl");
         vertexShader.addInputAttribute("in_Position");
         vertexShader.addInputAttribute("in_Color");
         this.shaderProgram = new ShaderProgram();
