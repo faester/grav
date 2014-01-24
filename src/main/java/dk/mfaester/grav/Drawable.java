@@ -1,5 +1,6 @@
 package dk.mfaester.grav;
 
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 /**
@@ -28,6 +29,12 @@ public interface Drawable {
     float[] getVertices();
 
     float[] getColors();
+
+    Vector3f getPosition();
+
+    Vector3f getModelAngle();
+
+    Vector3f getModelScale();
 
     /**
      * Gets the indices for the vertices to set.

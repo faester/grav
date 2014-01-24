@@ -1,19 +1,23 @@
 package dk.mfaester.grav;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.ContextAttribs;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.util.glu.GLU;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.*;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.nio.FloatBuffer;
 
 public class Program {
     private ShaderProgram shaderProgram;
+    private Vector3f cameraPos = new Vector3f(0, 0, -1);
+    private Matrix4f projectionMatrix;
+    private FloatBuffer matrix44Buffer = BufferUtils.createFloatBuffer(16);
+    private int projectionMatrixLocation;
+    private int viewMatrixLocation;
+    private int modelMatrixLocation;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -33,7 +37,7 @@ public class Program {
 
         this.loadShaders();
 
-        this.drawables = CreateDrawables();
+        this.drawables = createDrawables();
 
         this.bindDrawables(drawables);
 
@@ -56,13 +60,20 @@ public class Program {
         Shader vertexShader = Shader.loadVertexShader("C:/workdirs/grav/src/main/resources/vertex.glsl");
         vertexShader.addInputAttribute("in_Position");
         vertexShader.addInputAttribute("in_Color");
+        vertexShader.addInputAttribute("in_TextureCoord");
         this.shaderProgram = new ShaderProgram();
         this.shaderProgram.AttachShader(vertexShader);
         this.shaderProgram.AttachShader(fragmentShader);
         this.shaderProgram.LinkAndValidateProgram();
+
+        // Get matrices uniform locations
+        projectionMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "projectionMatrix");
+        viewMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "viewMatrix");
+        modelMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "modelMatrix");
+        exitOnGLError("loadShaders()");
     }
 
-    private Drawable[] CreateDrawables() {
+    private Drawable[] createDrawables() {
         Drawable[] drawables = {
                 new Gnyf(),
                 new Gnaf(),
@@ -97,7 +108,37 @@ public class Program {
         // Map the internal OpenGL coordinate system to the entire screen
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
 
+        createProjectionMatrix();
+
         this.exitOnGLError("Error in setupOpenGL");
+    }
+
+    public void createProjectionMatrix(){
+        // Setup projection matrix
+        projectionMatrix = new Matrix4f();
+        float fieldOfView = 60f;
+        float aspectRatio = (float)WIDTH / (float)HEIGHT;
+        float near_plane = 0.1f;
+        float far_plane = 100f;
+
+        float y_scale = this.coTangent(this.degreesToRadians(fieldOfView / 2f));
+        float x_scale = y_scale / aspectRatio;
+        float frustum_length = far_plane - near_plane;
+
+        projectionMatrix.m00 = x_scale;
+        projectionMatrix.m11 = y_scale;
+        projectionMatrix.m22 = -((far_plane + near_plane) / frustum_length);
+        projectionMatrix.m23 = -1;
+        projectionMatrix.m32 = -((2 * near_plane * far_plane) / frustum_length);
+        projectionMatrix.m33 = 0;
+    }
+
+    private float degreesToRadians(float angle) {
+        return angle * (float)Math.PI / 180f;
+    }
+
+    private float coTangent(float value){
+        return (float)(1 / Math.tan(value));
     }
 
     public void bindDrawables(Drawable[] drawables) {
@@ -113,15 +154,21 @@ public class Program {
     }
 
     public void loopCycle(Drawable[] drawables) {
+        render(drawables);
+    }
+
+    private void render(Drawable[] drawables) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
-        GL20.glUseProgram(this.shaderProgram.getGlProgramId());
-
         for (Drawable drawable : drawables) {
+            prepareProjection(drawable);
             // Bind to the VAO that has all the information about the quad vertices
+
+            GL20.glUseProgram(this.shaderProgram.getGlProgramId());
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
             GL20.glEnableVertexAttribArray(1);
+            GL20.glEnableVertexAttribArray(2);
 
             // Bind to element index array
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
@@ -133,10 +180,44 @@ public class Program {
             GL20.glDisableVertexAttribArray(0);
             GL20.glDisableVertexAttribArray(1);
             GL30.glBindVertexArray(0);
+            GL20.glUseProgram(0);
         }
 
-        GL20.glUseProgram(0);
+
         this.exitOnGLError("Error in loopCycle");
+    }
+
+    private void prepareProjection(Drawable drawable) {
+// Reset view and model matrices
+        Matrix4f viewMatrix = new Matrix4f();
+
+        Matrix4f modelMatrix = new Matrix4f();
+
+// Translate camera
+        org.lwjgl.util.vector.Matrix4f.translate(cameraPos, viewMatrix, viewMatrix);
+
+// Scale, translate and rotate model
+        Vector3f modelAngle = drawable.getModelAngle();
+        Matrix4f.scale(drawable.getModelScale(), modelMatrix, modelMatrix);
+        Matrix4f.translate(drawable.getPosition(), modelMatrix, modelMatrix);
+        Matrix4f.rotate(this.degreesToRadians(modelAngle.z), new Vector3f(0, 0, 1),
+                modelMatrix, modelMatrix);
+        Matrix4f.rotate(this.degreesToRadians(modelAngle.y), new Vector3f(0, 1, 0),
+                modelMatrix, modelMatrix);
+        Matrix4f.rotate(this.degreesToRadians(modelAngle.x), new Vector3f(1, 0, 0),
+                modelMatrix, modelMatrix);
+// Upload matrices to the uniform variables
+        GL20.glUseProgram(shaderProgram.getGlProgramId());
+        projectionMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+
+        /// http://lwjgl.org/wiki/index.php?title=The_Quad_with_Projection,_View_and_Model_matrices
+        GL20.glUniformMatrix4(projectionMatrixLocation, false, matrix44Buffer);
+        viewMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+        GL20.glUniformMatrix4(viewMatrixLocation, false, matrix44Buffer);
+        modelMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+        GL20.glUniformMatrix4(modelMatrixLocation, false, matrix44Buffer);
+        GL20.glUseProgram(0);
+        this.exitOnGLError("logicCycle");
     }
 
     public void destroyOpenGL(Drawable[] drawables) {
@@ -164,7 +245,7 @@ public class Program {
 
         if (errorValue != GL11.GL_NO_ERROR) {
             String errorString = GLU.gluErrorString(errorValue);
-            System.err.println("ERROR - " + errorMessage + ": " + errorString);
+            System.err.println("ERROR - OpenGL - " + errorMessage + ": " + errorString);
 
             if (Display.isCreated()) Display.destroy();
             System.exit(-1);

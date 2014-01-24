@@ -1,10 +1,8 @@
 package dk.mfaester.grav;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
+import org.lwjgl.util.glu.GLU;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -59,7 +57,6 @@ public class DrawableToOpenGlVaoBinder
         // Deselect the VBO.
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
         drawable.setVertexIndexBufferObjectId(vboiId);
-
     }
 
     private void bindVertices(Drawable drawable) {
@@ -67,7 +64,6 @@ public class DrawableToOpenGlVaoBinder
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices);
         verticesBuffer.flip();
-
         int vertextBufferObjectId = GL15.glGenBuffers();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertextBufferObjectId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);

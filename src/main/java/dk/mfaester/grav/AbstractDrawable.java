@@ -1,6 +1,7 @@
 package dk.mfaester.grav;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by Morten.Faester on 20-01-14.
@@ -14,6 +15,7 @@ public abstract class AbstractDrawable implements Drawable {
     private final int[] indices = createIndices();
 
     protected abstract float[] createColors();
+
     private int vertexBufferObjectId;
     private int vertexBufferObjectIndexId;
 
@@ -25,6 +27,27 @@ public abstract class AbstractDrawable implements Drawable {
     public boolean hasBeenSent() {
         return hasBeenSent;
     }
+
+
+    final private static Vector3f position = new Vector3f(0, 0, 0);
+    final private static Vector3f angle = new Vector3f(2f, 23f, 0);
+    final private static Vector3f scale = new Vector3f(1, 1, 1);
+
+    @Override
+    public Vector3f getPosition() {
+        return AbstractDrawable.position;
+    }
+
+    @Override
+    public Vector3f getModelAngle() {
+        return AbstractDrawable.angle;
+    }
+
+    @Override
+    public Vector3f getModelScale() {
+        return AbstractDrawable.scale;
+    }
+
 
     @Override
     public void setHasBeenSent(boolean value) {
