@@ -2,6 +2,7 @@ package dk.mfaester.grav;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
@@ -16,6 +17,7 @@ public class Program {
     private int viewMatrixLocation;
     private int modelMatrixLocation;
     private Camera camera;
+    private boolean isWireframeRendering = false;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -42,6 +44,8 @@ public class Program {
         this.bindDrawables(drawables);
 
         while (!Display.isCloseRequested()) {
+            this.receiveInput();
+
             // Do a single loop (logic/render)
             this.loopCycle(this.drawables);
 
@@ -53,6 +57,29 @@ public class Program {
 
         // Destroy OpenGL (Display)
         this.destroyOpenGL(drawables);
+    }
+
+    private void receiveInput() {
+        while (Keyboard.next()) {
+            switch (Keyboard.getEventKey()) {
+                case Keyboard.KEY_W:
+                    switchWireframeMode();
+            }
+        }
+    }
+
+    private void switchWireframeMode() {
+        this.isWireframeRendering = !this.isWireframeRendering;
+        System.out.println("Wireframe rendering: " + this.isWireframeRendering);
+        this.setOpenGLWirefromeMode();
+    }
+
+    private void setOpenGLWirefromeMode() {
+        if (this.isWireframeRendering) {
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        } else {
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+        }
     }
 
     private void loadShaders() {
@@ -98,6 +125,8 @@ public class Program {
 
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             GL11.glDepthFunc(GL11.GL_LEQUAL);
+
+            setOpenGLWirefromeMode();
             GL11.glViewport(0, 0, WIDTH, HEIGHT);
         } catch (LWJGLException e) {
             e.printStackTrace();
