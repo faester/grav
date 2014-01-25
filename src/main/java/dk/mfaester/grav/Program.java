@@ -1,6 +1,5 @@
 package dk.mfaester.grav;
 
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
@@ -12,12 +11,11 @@ import java.nio.FloatBuffer;
 
 public class Program {
     private ShaderProgram shaderProgram;
-    private Vector3f cameraPos = new Vector3f(0, 0, -1);
-    private Matrix4f projectionMatrix;
     private FloatBuffer matrix44Buffer = BufferUtils.createFloatBuffer(16);
     private int projectionMatrixLocation;
     private int viewMatrixLocation;
     private int modelMatrixLocation;
+    private Camera camera;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -38,6 +36,8 @@ public class Program {
         this.loadShaders();
 
         this.drawables = createDrawables();
+
+        this.camera = new Camera(WIDTH, HEIGHT);
 
         this.bindDrawables(drawables);
 
@@ -96,6 +96,8 @@ public class Program {
             Display.setTitle(WINDOW_TITLE);
             Display.create(pixelFormat, contextAtrributes);
 
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glDepthFunc(GL11.GL_LEQUAL);
             GL11.glViewport(0, 0, WIDTH, HEIGHT);
         } catch (LWJGLException e) {
             e.printStackTrace();
@@ -108,37 +110,7 @@ public class Program {
         // Map the internal OpenGL coordinate system to the entire screen
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
 
-        createProjectionMatrix();
-
         this.exitOnGLError("Error in setupOpenGL");
-    }
-
-    public void createProjectionMatrix(){
-        // Setup projection matrix
-        projectionMatrix = new Matrix4f();
-        float fieldOfView = 60f;
-        float aspectRatio = (float)WIDTH / (float)HEIGHT;
-        float near_plane = 0.1f;
-        float far_plane = 100f;
-
-        float y_scale = this.coTangent(this.degreesToRadians(fieldOfView / 2f));
-        float x_scale = y_scale / aspectRatio;
-        float frustum_length = far_plane - near_plane;
-
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((far_plane + near_plane) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * near_plane * far_plane) / frustum_length);
-        projectionMatrix.m33 = 0;
-    }
-
-    private float degreesToRadians(float angle) {
-        return angle * (float)Math.PI / 180f;
-    }
-
-    private float coTangent(float value){
-        return (float)(1 / Math.tan(value));
     }
 
     public void bindDrawables(Drawable[] drawables) {
@@ -158,7 +130,7 @@ public class Program {
     }
 
     private void render(Drawable[] drawables) {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
         for (Drawable drawable : drawables) {
             prepareProjection(drawable);
@@ -194,21 +166,21 @@ public class Program {
         Matrix4f modelMatrix = new Matrix4f();
 
 // Translate camera
-        org.lwjgl.util.vector.Matrix4f.translate(cameraPos, viewMatrix, viewMatrix);
+        org.lwjgl.util.vector.Matrix4f.translate(this.camera.getPosition(), viewMatrix, viewMatrix);
 
 // Scale, translate and rotate model
         Vector3f modelAngle = drawable.getModelAngle();
         Matrix4f.scale(drawable.getModelScale(), modelMatrix, modelMatrix);
         Matrix4f.translate(drawable.getPosition(), modelMatrix, modelMatrix);
-        Matrix4f.rotate(this.degreesToRadians(modelAngle.z), new Vector3f(0, 0, 1),
+        Matrix4f.rotate(MathUtil.degreesToRadians(modelAngle.z), new Vector3f(0, 0, 1),
                 modelMatrix, modelMatrix);
-        Matrix4f.rotate(this.degreesToRadians(modelAngle.y), new Vector3f(0, 1, 0),
+        Matrix4f.rotate(MathUtil.degreesToRadians(modelAngle.y), new Vector3f(0, 1, 0),
                 modelMatrix, modelMatrix);
-        Matrix4f.rotate(this.degreesToRadians(modelAngle.x), new Vector3f(1, 0, 0),
+        Matrix4f.rotate(MathUtil.degreesToRadians(modelAngle.x), new Vector3f(1, 0, 0),
                 modelMatrix, modelMatrix);
 // Upload matrices to the uniform variables
         GL20.glUseProgram(shaderProgram.getGlProgramId());
-        projectionMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+        this.camera.getProjectionMatrix().store(matrix44Buffer); matrix44Buffer.flip();
 
         /// http://lwjgl.org/wiki/index.php?title=The_Quad_with_Projection,_View_and_Model_matrices
         GL20.glUniformMatrix4(projectionMatrixLocation, false, matrix44Buffer);

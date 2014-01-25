@@ -29,25 +29,24 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
 
-    final private static Vector3f position = new Vector3f(0, 0, 0);
-    final private static Vector3f angle = new Vector3f(2f, 23f, 0);
-    final private static Vector3f scale = new Vector3f(1, 1, 1);
+    protected Vector3f position = new Vector3f(0, 0, 0);
+    protected Vector3f angle = new Vector3f(0, 0, 0);
+    protected Vector3f scale = new Vector3f(1, 1, 1);
 
     @Override
     public Vector3f getPosition() {
-        return AbstractDrawable.position;
+        return this.position;
     }
 
     @Override
     public Vector3f getModelAngle() {
-        return AbstractDrawable.angle;
+        return this.angle;
     }
 
     @Override
     public Vector3f getModelScale() {
-        return AbstractDrawable.scale;
+        return this.scale;
     }
-
 
     @Override
     public void setHasBeenSent(boolean value) {
