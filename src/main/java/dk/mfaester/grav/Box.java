@@ -55,14 +55,23 @@ public class Box extends AbstractDrawable {
     @Override
     protected int[] createIndices() {
         final int[] indices = {
+                0, 3, 7,
+                4, 7, 0,
+
+                1, 2, 6,
+                5, 6, 1,
+
                 0, 1, 2,
                 3, 2, 0,
 
                 4, 5, 6,
                 7, 6, 4,
 
+                3, 2, 6,
+                7, 6, 3,
+
                 0, 1, 5,
-                4, 3, 0,
+                4, 5, 0,
         };
         return indices;
     }
