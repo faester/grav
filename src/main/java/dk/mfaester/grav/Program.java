@@ -17,7 +17,7 @@ public class Program {
     private int viewMatrixLocation;
     private int modelMatrixLocation;
     private Camera camera;
-    private boolean isWireframeRendering = false;
+    private KeyboardHandler keyboardHandler;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -41,10 +41,12 @@ public class Program {
 
         this.camera = new Camera(WIDTH, HEIGHT);
 
+        this.keyboardHandler = new KeyboardHandler(this.camera);
+
         this.bindDrawables(drawables);
 
         while (!Display.isCloseRequested()) {
-            this.receiveInput();
+            this.keyboardHandler.receiveInput();
 
             // Do a single loop (logic/render)
             this.loopCycle(this.drawables);
@@ -57,50 +59,6 @@ public class Program {
 
         // Destroy OpenGL (Display)
         this.destroyOpenGL(drawables);
-    }
-
-    private void receiveInput() {
-        while (Keyboard.next()) {
-            switch (Keyboard.getEventKey()) {
-                case Keyboard.KEY_W:
-                    switchWireframeMode();
-                    break;
-                case Keyboard.KEY_UP:
-                    this.camera.moveForward();
-                    break;
-                case Keyboard.KEY_DOWN:
-                    this.camera.moveBackward();
-                    break;
-                case Keyboard.KEY_RIGHT:
-                    this.camera.moveRight();
-                    break;
-                case Keyboard.KEY_LEFT:
-                    this.camera.moveLeft();
-                    break;
-                case Keyboard.KEY_PRIOR: //PageUp
-                    this.camera.moveUp();
-                    break;
-                case Keyboard.KEY_NEXT: // PgDown
-                    this.camera.moveDown();
-                    break;
-                case Keyboard.KEY_Q:
-                    Display.destroy();
-            }
-        }
-    }
-
-    private void switchWireframeMode() {
-        this.isWireframeRendering = !this.isWireframeRendering;
-        System.out.println("Wireframe rendering: " + this.isWireframeRendering);
-        this.setOpenGLWirefromeMode();
-    }
-
-    private void setOpenGLWirefromeMode() {
-        if (this.isWireframeRendering) {
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        } else {
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-        }
     }
 
     private void loadShaders() {
@@ -147,7 +105,6 @@ public class Program {
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             GL11.glDepthFunc(GL11.GL_LEQUAL);
 
-            setOpenGLWirefromeMode();
             GL11.glViewport(0, 0, WIDTH, HEIGHT);
         } catch (LWJGLException e) {
             e.printStackTrace();

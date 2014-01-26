@@ -11,6 +11,10 @@ public class Camera {
     private float height;
     private final float moveDelta = 0.01f;
 
+    private final static Vector3f xVector = new Vector3f(1, 0, 0);
+    private final static Vector3f yVector = new Vector3f(0, 1, 0);
+    private final float rotateStep = 0.01f;
+
     public Camera(int width, int height){
         this.width = width;
         this.height = height;
@@ -46,6 +50,22 @@ public class Camera {
 
     public void moveForward(){
         this.position.setZ(this.position.getZ() + moveDelta);
+    }
+
+    public void rotateClockWiseX() {
+        projectionMatrix.rotate(rotateStep, xVector);
+    }
+
+    public void rotateCounterClockWiseX() {
+        projectionMatrix.rotate(-rotateStep, xVector);
+    }
+
+    public void rotateClockWiseY() {
+        projectionMatrix.rotate(rotateStep, yVector);
+    }
+
+    public void rotateCounterClockWiseY() {
+        projectionMatrix.rotate(-rotateStep, yVector);
     }
 
     public Matrix4f getProjectionMatrix() {
