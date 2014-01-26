@@ -64,6 +64,27 @@ public class Program {
             switch (Keyboard.getEventKey()) {
                 case Keyboard.KEY_W:
                     switchWireframeMode();
+                    break;
+                case Keyboard.KEY_UP:
+                    this.camera.moveForward();
+                    break;
+                case Keyboard.KEY_DOWN:
+                    this.camera.moveBackward();
+                    break;
+                case Keyboard.KEY_RIGHT:
+                    this.camera.moveRight();
+                    break;
+                case Keyboard.KEY_LEFT:
+                    this.camera.moveLeft();
+                    break;
+                case Keyboard.KEY_PRIOR: //PageUp
+                    this.camera.moveUp();
+                    break;
+                case Keyboard.KEY_NEXT: // PgDown
+                    this.camera.moveDown();
+                    break;
+                case Keyboard.KEY_Q:
+                    Display.destroy();
             }
         }
     }
@@ -209,13 +230,16 @@ public class Program {
                 modelMatrix, modelMatrix);
 // Upload matrices to the uniform variables
         GL20.glUseProgram(shaderProgram.getGlProgramId());
-        this.camera.getProjectionMatrix().store(matrix44Buffer); matrix44Buffer.flip();
+        this.camera.getProjectionMatrix().store(matrix44Buffer);
+        matrix44Buffer.flip();
 
         /// http://lwjgl.org/wiki/index.php?title=The_Quad_with_Projection,_View_and_Model_matrices
         GL20.glUniformMatrix4(projectionMatrixLocation, false, matrix44Buffer);
-        viewMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+        viewMatrix.store(matrix44Buffer);
+        matrix44Buffer.flip();
         GL20.glUniformMatrix4(viewMatrixLocation, false, matrix44Buffer);
-        modelMatrix.store(matrix44Buffer); matrix44Buffer.flip();
+        modelMatrix.store(matrix44Buffer);
+        matrix44Buffer.flip();
         GL20.glUniformMatrix4(modelMatrixLocation, false, matrix44Buffer);
         GL20.glUseProgram(0);
         this.exitOnGLError("logicCycle");
@@ -225,7 +249,7 @@ public class Program {
         // Disable the VBO index from the VAO attributes list
         GL20.glDisableVertexAttribArray(0);
 
-        for(Drawable drawable : drawables){
+        for (Drawable drawable : drawables) {
             // Delete the VBO
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
             GL15.glDeleteBuffers(drawable.getVertexBufferObjectId());

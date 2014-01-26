@@ -9,6 +9,7 @@ public class Camera {
       */
     private float width;
     private float height;
+    private final float moveDelta = 0.01f;
 
     public Camera(int width, int height){
         this.width = width;
@@ -21,6 +22,30 @@ public class Camera {
 
     public Vector3f getPosition() {
         return this.position;
+    }
+
+    public void moveLeft(){
+        this.position.setX(this.position.getX() - moveDelta);
+    }
+
+    public void moveRight(){
+        this.position.setX(this.position.getX() + moveDelta);
+    }
+
+    public void moveUp(){
+        this.position.setY(this.position.getY() + moveDelta);
+    }
+
+    public void moveDown(){
+        this.position.setY(this.position.getY() - moveDelta);
+    }
+
+    public void moveBackward(){
+        this.position.setZ(this.position.getZ() - moveDelta);
+    }
+
+    public void moveForward(){
+        this.position.setZ(this.position.getZ() + moveDelta);
     }
 
     public Matrix4f getProjectionMatrix() {
