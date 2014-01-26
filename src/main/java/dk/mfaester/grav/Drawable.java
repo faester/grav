@@ -68,12 +68,6 @@ public interface Drawable {
      */
     int getIndexCount();
 
-    /**
-     * Gets the color of the Drawable. (Is subject to change soon.)
-     * @return
-     */
-    Vector4f getColor();
-
     void setVertexBufferObjectId(int vertexBufferObjectId);
 
     void setVertexIndexBufferObjectId(int vertexBufferObjectIndexId);
