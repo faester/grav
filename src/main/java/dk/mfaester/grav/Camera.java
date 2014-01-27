@@ -92,6 +92,16 @@ public class Camera {
         projectionMatrix.rotate(-rotateStep, yVector);
     }
 
+    public void rotateClockWiseZ() {
+        this.movement.rotate(rotateStep, zVector);
+        projectionMatrix.rotate(rotateStep, zVector);
+    }
+
+    public void rotateCounterClockWiseZ() {
+        this.movement.rotate(-rotateStep, zVector);
+        projectionMatrix.rotate(-rotateStep, zVector);
+    }
+
     public Matrix4f getProjectionMatrix() {
         return projectionMatrix;
     }

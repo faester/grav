@@ -18,6 +18,8 @@ public class KeyboardHandler {
     private boolean isRotateCcwX;
     private boolean isRotateCwY;
     private boolean destroying;
+    private boolean isRotateCwZ;
+    private boolean isRotateCcwZ;
 
     public KeyboardHandler(Camera camera) {
         this.camera = camera;
@@ -60,6 +62,12 @@ public class KeyboardHandler {
                 case Keyboard.KEY_D:
                     this.isRotateCwY = Keyboard.getEventKeyState();
                     break;
+                case Keyboard.KEY_Q:
+                    this.isRotateCcwZ = Keyboard.getEventKeyState();
+                    break;
+                case Keyboard.KEY_E:
+                    this.isRotateCwZ = Keyboard.getEventKeyState();
+                    break;
                 case Keyboard.KEY_ESCAPE:
                     this.destroying= true;
                     Display.destroy();
@@ -98,6 +106,12 @@ public class KeyboardHandler {
         }
         if (isRotateCwY){
             this.camera.rotateClockWiseY();
+        }
+        if (isRotateCcwZ){
+            this.camera.rotateCounterClockWiseZ();
+        }
+        if (isRotateCwZ){
+            this.camera.rotateClockWiseZ();
         }
     }
 

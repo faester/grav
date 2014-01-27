@@ -81,9 +81,10 @@ public class Program {
 
     private Drawable[] createDrawables() {
         Drawable[] drawables = {
-                new Gnyf(),
-                new Gnaf(),
+//                new Gnyf(),
+//                new Gnaf(),
                 new Box(),
+                new IcoSphere(1f, 1f),
         };
 
         return drawables;
