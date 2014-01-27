@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 public class KeyboardHandler {
     private Camera camera;
-    private boolean isWireframeRendering = false;
+    private boolean isWireframeRendering;
     private boolean isMoveUp;
     private boolean isMoveBackward;
     private boolean isMoveDown;

@@ -1,5 +1,7 @@
 package dk.mfaester.grav;
 
+import org.lwjgl.util.vector.Matrix;
+import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -11,14 +13,32 @@ public class Camera {
     private float height;
     private final float moveDelta = 0.01f;
 
+
+    private final Matrix4f movement ;
+
     private final static Vector3f xVector = new Vector3f(1, 0, 0);
     private final static Vector3f yVector = new Vector3f(0, 1, 0);
+    private final static Vector3f zVector = new Vector3f(0, 0, 1);
     private final float rotateStep = 0.01f;
 
     public Camera(int width, int height){
         this.width = width;
         this.height = height;
         createProjectionMatrix();
+        movement = new Matrix4f();
+        movement.setIdentity();
+    }
+
+    private Vector3f getXVector(){
+        return new Vector3f(movement.m00 * this.moveDelta, movement.m10 * this.moveDelta, movement.m20 * this.moveDelta);
+    }
+
+    private Vector3f getYVector(){
+        return new Vector3f(movement.m01 * this.moveDelta, movement.m11 * this.moveDelta, movement.m21 * this.moveDelta);
+    }
+
+    private Vector3f getZVector(){
+        return new Vector3f(movement.m02 * this.moveDelta, movement.m12 * this.moveDelta, movement.m22 * this.moveDelta);
     }
 
     private Vector3f position = new Vector3f(0, 0, -1);
@@ -29,42 +49,46 @@ public class Camera {
     }
 
     public void moveLeft(){
-        this.position.setX(this.position.getX() - moveDelta);
+        Vector3f.add(this.position, getXVector(), this.position);
     }
 
     public void moveRight(){
-        this.position.setX(this.position.getX() + moveDelta);
+        Vector3f.sub(this.position, getXVector(), this.position);
     }
 
     public void moveUp(){
-        this.position.setY(this.position.getY() + moveDelta);
+        Vector3f.add(this.position, getYVector(), this.position);
     }
 
     public void moveDown(){
-        this.position.setY(this.position.getY() - moveDelta);
+        Vector3f.sub(this.position, getYVector(), this.position);
     }
 
     public void moveBackward(){
-        this.position.setZ(this.position.getZ() - moveDelta);
+        Vector3f.sub(this.position, getZVector(), this.position);
     }
 
     public void moveForward(){
-        this.position.setZ(this.position.getZ() + moveDelta);
+        Vector3f.add(this.position, getZVector(), this.position);
     }
 
     public void rotateClockWiseX() {
+        this.movement.rotate(rotateStep, xVector);
         projectionMatrix.rotate(rotateStep, xVector);
     }
 
     public void rotateCounterClockWiseX() {
+        this.movement.rotate(-rotateStep, xVector);
         projectionMatrix.rotate(-rotateStep, xVector);
     }
 
     public void rotateClockWiseY() {
+        this.movement.rotate(rotateStep, yVector);
         projectionMatrix.rotate(rotateStep, yVector);
     }
 
     public void rotateCounterClockWiseY() {
+        this.movement.rotate(-rotateStep, yVector);
         projectionMatrix.rotate(-rotateStep, yVector);
     }
 
