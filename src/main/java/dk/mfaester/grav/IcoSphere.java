@@ -92,8 +92,6 @@ public class IcoSphere extends AbstractDrawable {
             int indexB = workingIndices.get(i + 1);
             int indexC = workingIndices.get(i + 2);
 
-            System.out.println(indexA + " - " + workingIndices.size() + " - v " + workingVertices.size());
-
             Vector3f a = workingVertices.get(indexA);
             Vector3f b = workingVertices.get(indexB);
             Vector3f c = workingVertices.get(indexC);
@@ -141,7 +139,7 @@ public class IcoSphere extends AbstractDrawable {
     protected float[] createColors() {
         float[] colors = new float[verticePoints.length];
         for(int i = 0; i < verticePoints.length; i++){
-            colors[i] = 1f;
+            colors[i] = (i % 7) % 2;
         }
         return colors;
     }
@@ -170,7 +168,6 @@ public class IcoSphere extends AbstractDrawable {
         for(int i = 0; i < points.size(); i++){
             Vector3f currentPoint = points.get(i);
             float scale = this.radius / currentPoint.length();
-            System.out.println("Scale " + scale);
             currentPoint.scale(this.radius / (float)currentPoint.length());
 
             int arrayOffset = i * 4;
@@ -179,7 +176,6 @@ public class IcoSphere extends AbstractDrawable {
             array[arrayOffset + 2] = currentPoint.getZ();
             array[arrayOffset + 3] = 1f;
         }
-        System.out.println("Vectors " + array.length);
         return array;
     }
 
