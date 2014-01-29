@@ -2,31 +2,28 @@ package dk.mfaester.grav;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
-import org.omg.PortableServer._ServantActivatorStub;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class IcoSphere extends AbstractDrawable {
 //http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     private final static float t = (float)(1 + Math.sqrt(5f)) / 2.0f;
-    private final static float[] icoPoints = {
-        -1f, t, 0,
-        1f, t, 0,
-        -1f, -t, 0,
-        1f, -t, 0,
-        0, -1f, t,
-        0, 1f, t,
-        0, -1f, -t,
-        0, 1f, -t,
-        t, 0, -1f,
-        t, 0, 1f,
-        -t, 0, -1f,
-        -t, 0, 1f,
+    private final static Vector3f[] icoPoints = {
+            new Vector3f(-1f, t, 0),
+            new Vector3f(1f, t, 0),
+            new Vector3f(-1f, -t, 0),
+            new Vector3f(1f, -t, 0),
+            new Vector3f(0, -1f, t),
+            new Vector3f(0, 1f, t),
+            new Vector3f(0, -1f, -t),
+            new Vector3f(0, 1f, -t),
+            new Vector3f(t, 0, -1f),
+            new Vector3f(t, 0, 1f),
+            new Vector3f(-t, 0, -1f),
+            new Vector3f(-t, 0, 1f),
     };
 
-    private final static int[] indices = new int[]{
+    private final static int[] icoIndices = new int[]{
 // 5 faces around point 0
         0, 11, 5,
         0, 5, 1,
@@ -49,42 +46,90 @@ public class IcoSphere extends AbstractDrawable {
         3, 8, 9,
 
 // 5 adjacent faces
-                4, 9, 5,
-                2, 4, 11,
-                6, 2, 10,
-                8, 6, 7,
-                9, 8, 1,
+        4, 9, 5,
+        2, 4, 11,
+        6, 2, 10,
+        8, 6, 7,
+        9, 8, 1,
     };
 
-
-    private final static float[] colors = {
-        0, 0, 0, 1f,
-        0, 1, 0, 1f,
-        0, 0, 1, 1f,
-        0, 1, 1, 1f,
-        1, 0, 0, 1f,
-        1, 1, 0, 1f,
-        1, 0, 1, 1f,
-        1, 1, 1, 1f,
-        0.5f, 0f, 0.5f, 1f,
-        0.5f, 0.5f, 0.5f, 1f,
-        0.5f, 0f, 0f, 1f,
-        0.5f, 0.5f, 0f, 1f,
-    };
+    private int[] indices;
+    private float[] verticePoints;
 
     private final float radius;
-    private final float step;
+    private final int depth;
 
-    private IcoSphere(){
-        this.radius = 0.4f;
-        this.step = 0.4f;
+    public IcoSphere(float radius, int depth){
+        this.radius = radius;
+        this.depth = depth;
+        init();
     }
 
-    public IcoSphere(float radius, float step){
-        System.out.println("Radius " + radius);
+    private void init(){
+        ArrayList<Vector3f> workingVertices = initVertices();
+        ArrayList<Integer> workingIndices = new ArrayList<Integer>();
+        for (int i = 0; i < icoIndices.length; i++){
+            workingIndices.add(icoIndices[i]);
+        }
 
-        this.radius = radius;
-        this.step = step;
+        for (int recursions = 0; recursions < this.depth; recursions++){
+            workingIndices = subdivide(workingVertices, workingIndices);
+        }
+
+        this.indices = toIntArray(workingIndices);
+        this.verticePoints = fitOnRadius(workingVertices);
+    }
+
+    private ArrayList<Integer> subdivide(
+            final ArrayList<Vector3f> workingVertices,
+            final ArrayList<Integer> workingIndices) {
+        ArrayList<Integer> newWorkingIndices
+                = new ArrayList<Integer>();
+        newWorkingIndices.ensureCapacity(workingIndices.size() * 3);
+        for (int i = 0; i < workingIndices.size(); i += 3) {
+            int newVertexIndex = workingVertices.size();
+            int indexA = workingIndices.get(i);
+            int indexB = workingIndices.get(i + 1);
+            int indexC = workingIndices.get(i + 2);
+
+            System.out.println(indexA + " - " + workingIndices.size() + " - v " + workingVertices.size());
+
+            Vector3f a = workingVertices.get(indexA);
+            Vector3f b = workingVertices.get(indexB);
+            Vector3f c = workingVertices.get(indexC);
+
+            Vector3f center =
+                    new Vector3f(
+                            (a.getX() + b.getX() + c.getX()) / 3f,
+                            (a.getY() + b.getY() + c.getY()) / 3f,
+                            (a.getZ() + b.getZ() + c.getZ()) / 3f);
+
+            newWorkingIndices.add(indexA);
+            newWorkingIndices.add(newVertexIndex);
+            newWorkingIndices.add(indexB);
+
+            newWorkingIndices.add(newVertexIndex);
+            newWorkingIndices.add(indexC);
+            newWorkingIndices.add(indexB);
+
+            newWorkingIndices.add(indexA);
+            newWorkingIndices.add(newVertexIndex);
+            newWorkingIndices.add(indexC);
+
+            // Also needs the point between A - B, C - B and C - A
+
+            workingVertices.add(center);
+        }
+
+        return newWorkingIndices;
+    }
+
+    private int[] toIntArray(final ArrayList<Integer> workingIndices) {
+        int[] result = new int[workingIndices.size()];
+        for(int i = 0; i < result.length; i++){
+            result[i] = workingIndices.get(i);
+        }
+        return result;
     }
 
     @Override
@@ -94,25 +139,36 @@ public class IcoSphere extends AbstractDrawable {
 
     @Override
     protected float[] createColors() {
+        float[] colors = new float[verticePoints.length];
+        for(int i = 0; i < verticePoints.length; i++){
+            colors[i] = 1f;
+        }
         return colors;
     }
 
     @Override
     protected float[] createVertices() {
-        ArrayList<Vector3f> points = new ArrayList<Vector3f>();
-        points.ensureCapacity(icoPoints.length / 3);
-        for(int i = 0; i < icoPoints.length; i+=3){
-            points.add(new Vector3f(icoPoints[i], icoPoints[i + 1], icoPoints[i + 2]));
-        }
-        return fitOnRadius(points);
+        return this.verticePoints;
     }
 
-    private float[] fitOnRadius(ArrayList<Vector3f> points){
+    protected ArrayList<Vector3f> initVertices() {
+        ArrayList<Vector3f> points = new ArrayList<Vector3f>();
+        points.ensureCapacity(icoPoints.length / 3);
+        for(int i = 0; i < icoPoints.length; i++){
+            Vector3f clone = cloneVector3f(icoPoints[i]);
+            points.add(clone);
+        }
+        return points;
+    }
+
+    private Vector3f cloneVector3f(final Vector3f icoPoint) {
+        return new Vector3f(icoPoint.getX(), icoPoint.getY(), icoPoint.getZ());
+    }
+
+    private float[] fitOnRadius(final ArrayList<Vector3f> points){
         float[] array = new float[points.size() * 4];
         for(int i = 0; i < points.size(); i++){
             Vector3f currentPoint = points.get(i);
-            System.out.println("Length " + currentPoint.length());
-            System.out.println("Radius " + this.radius);
             float scale = this.radius / currentPoint.length();
             System.out.println("Scale " + scale);
             currentPoint.scale(this.radius / (float)currentPoint.length());
@@ -122,9 +178,8 @@ public class IcoSphere extends AbstractDrawable {
             array[arrayOffset + 1] = currentPoint.getY();
             array[arrayOffset + 2] = currentPoint.getZ();
             array[arrayOffset + 3] = 1f;
-            System.out.println("Length " + currentPoint.length());
         }
-        System.out.println("Containing " + array.length);
+        System.out.println("Vectors " + array.length);
         return array;
     }
 
