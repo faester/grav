@@ -1,25 +1,29 @@
 package dk.mfaester.grav;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+import org.omg.PortableServer._ServantActivatorStub;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class IcoSphere extends AbstractDrawable {
 //http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
     private final static float t = (float)(1 + Math.sqrt(5f)) / 2.0f;
     private final static float[] icoPoints = {
-        -1f, t, 0, 1f,
-        1f, t, 0,  1f,
-        -1f, -t, 0, 1f,
-        1f, -t, 0, 1f,
-        0, -1f, t, 1f,
-        0, 1f, t, 1f,
-        0, -1f, -t, 1f,
-        0, 1f, -t, 1f,
-        t, 0, -1f, 1f,
-        t, 0, 1f, 1f,
-        -t, 0, -1f, 1f,
-        -t, 0, 1f, 1f,
+        -1f, t, 0,
+        1f, t, 0,
+        -1f, -t, 0,
+        1f, -t, 0,
+        0, -1f, t,
+        0, 1f, t,
+        0, -1f, -t,
+        0, 1f, -t,
+        t, 0, -1f,
+        t, 0, 1f,
+        -t, 0, -1f,
+        -t, 0, 1f,
     };
 
     private final static int[] indices = new int[]{
@@ -68,10 +72,17 @@ public class IcoSphere extends AbstractDrawable {
         0.5f, 0.5f, 0f, 1f,
     };
 
-    private float radius;
-    private float step;
+    private final float radius;
+    private final float step;
+
+    private IcoSphere(){
+        this.radius = 0.4f;
+        this.step = 0.4f;
+    }
 
     public IcoSphere(float radius, float step){
+        System.out.println("Radius " + radius);
+
         this.radius = radius;
         this.step = step;
     }
@@ -86,21 +97,35 @@ public class IcoSphere extends AbstractDrawable {
         return colors;
     }
 
-    private float[] toArray(List<Float> floats){
-        float[] array = new float[floats.size()];
-        for(int i = 0; i < floats.size(); i++){
-            array[i] = floats.get(i);
-        }
-        return array;
-    }
-
     @Override
     protected float[] createVertices() {
-        for(int i = 0; i < icoPoints.length; i++){
-            System.out.print(icoPoints[i] + ", ");
+        ArrayList<Vector3f> points = new ArrayList<Vector3f>();
+        points.ensureCapacity(icoPoints.length / 3);
+        for(int i = 0; i < icoPoints.length; i+=3){
+            points.add(new Vector3f(icoPoints[i], icoPoints[i + 1], icoPoints[i + 2]));
         }
-        System.out.println();
-        return icoPoints;
+        return fitOnRadius(points);
+    }
+
+    private float[] fitOnRadius(ArrayList<Vector3f> points){
+        float[] array = new float[points.size() * 4];
+        for(int i = 0; i < points.size(); i++){
+            Vector3f currentPoint = points.get(i);
+            System.out.println("Length " + currentPoint.length());
+            System.out.println("Radius " + this.radius);
+            float scale = this.radius / currentPoint.length();
+            System.out.println("Scale " + scale);
+            currentPoint.scale(this.radius / (float)currentPoint.length());
+
+            int arrayOffset = i * 4;
+            array[arrayOffset] = currentPoint.getX();
+            array[arrayOffset + 1] = currentPoint.getY();
+            array[arrayOffset + 2] = currentPoint.getZ();
+            array[arrayOffset + 3] = 1f;
+            System.out.println("Length " + currentPoint.length());
+        }
+        System.out.println("Containing " + array.length);
+        return array;
     }
 
     @Override

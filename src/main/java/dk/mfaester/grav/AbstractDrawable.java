@@ -10,9 +10,9 @@ public abstract class AbstractDrawable implements Drawable {
     private boolean hasBeenSent;
     private int openGlVaoId;
 
-    private final float[] vertices = createVertices();
-    private final float[] colors = createColors();
-    private final int[] indices = createIndices();
+    private float[] vertices;
+    private float[] colors;
+    private int[] indices;
 
     protected abstract float[] createColors();
 
@@ -27,7 +27,6 @@ public abstract class AbstractDrawable implements Drawable {
     public boolean hasBeenSent() {
         return hasBeenSent;
     }
-
 
     protected Vector3f position = new Vector3f(0, 0, 0);
     protected Vector3f angle = new Vector3f(0, 0, 0);
@@ -55,17 +54,26 @@ public abstract class AbstractDrawable implements Drawable {
 
     @Override
     public float[] getColors() {
+        if (this.colors == null){
+            this.colors = createColors();
+        }
         return this.colors;
     }
 
     @Override
     public float[] getVertices() {
-        return this.vertices;
+        if (this.vertices == null){
+            this.vertices= createVertices();
+        }
+        return vertices;
     }
 
     @Override
     public int[] getIndices() {
-        return this.indices;
+        if (this.indices == null){
+            this.indices = createIndices();
+        }
+        return indices;
     }
 
     @Override
