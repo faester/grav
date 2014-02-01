@@ -84,7 +84,7 @@ public class Program {
 //                new Gnyf(),
 //                new Gnaf(),
 //                new Box(),
-                new IcoSphere(1f, 2),
+                new IcoSphere(1f, 6),
         };
 
         return drawables;

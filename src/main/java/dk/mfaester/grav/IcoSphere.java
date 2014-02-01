@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class IcoSphere extends AbstractDrawable {
 //http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
@@ -68,12 +69,18 @@ public class IcoSphere extends AbstractDrawable {
     private void init(){
         ArrayList<Vector3fWithEquality> workingVertices = initVertices();
         ArrayList<Integer> workingIndices = new ArrayList<Integer>();
+        HashMap<Vector3fWithEquality, Integer> vertexIndexMap
+                = new HashMap<Vector3fWithEquality, Integer>(workingVertices.size());
         for (int i = 0; i < icoIndices.length; i++){
             workingIndices.add(icoIndices[i]);
         }
 
+        for (int i = 0; i < workingVertices.size(); i++){
+            vertexIndexMap.put(workingVertices.get(i), i);
+        }
+
         for (int recursions = 0; recursions < this.depth; recursions++){
-            workingIndices = subdivide(workingVertices, workingIndices);
+            workingIndices = subdivide(workingVertices, workingIndices, vertexIndexMap);
         }
 
         this.indices = toIntArray(workingIndices);
@@ -82,7 +89,8 @@ public class IcoSphere extends AbstractDrawable {
 
     private ArrayList<Integer> subdivide(
             final ArrayList<Vector3fWithEquality> workingVertices,
-            final ArrayList<Integer> workingIndices) {
+            final ArrayList<Integer> workingIndices,
+            final HashMap<Vector3fWithEquality, Integer> vertexIndexMap) {
         ArrayList<Integer> newWorkingIndices
                 = new ArrayList<Integer>();
         newWorkingIndices.ensureCapacity(workingIndices.size() * 3);
@@ -96,30 +104,45 @@ public class IcoSphere extends AbstractDrawable {
             Vector3fWithEquality b = workingVertices.get(indexB);
             Vector3fWithEquality c = workingVertices.get(indexC);
 
-            Vector3fWithEquality center =
-                    new Vector3fWithEquality(
-                            (a.getX() + b.getX() + c.getX()) / 3f,
-                            (a.getY() + b.getY() + c.getY()) / 3f,
-                            (a.getZ() + b.getZ() + c.getZ()) / 3f);
+            int indexAB = createCenterVertex(a, b, vertexIndexMap, workingVertices);
+            int indexAC = createCenterVertex(a, c, vertexIndexMap, workingVertices);
+            int indexBC = createCenterVertex(b, c, vertexIndexMap, workingVertices);
 
             newWorkingIndices.add(indexA);
-            newWorkingIndices.add(newVertexIndex);
+            newWorkingIndices.add(indexAB);
+            newWorkingIndices.add(indexAC);
+
             newWorkingIndices.add(indexB);
+            newWorkingIndices.add(indexAB);
+            newWorkingIndices.add(indexBC);
 
-            newWorkingIndices.add(newVertexIndex);
             newWorkingIndices.add(indexC);
-            newWorkingIndices.add(indexB);
+            newWorkingIndices.add(indexAC);
+            newWorkingIndices.add(indexBC);
 
-            newWorkingIndices.add(indexA);
-            newWorkingIndices.add(newVertexIndex);
-            newWorkingIndices.add(indexC);
-
-            // Also needs the point between A - B, C - B and C - A
-
-            workingVertices.add(center);
+            newWorkingIndices.add(indexAB);
+            newWorkingIndices.add(indexBC);
+            newWorkingIndices.add(indexAC);
         }
 
         return newWorkingIndices;
+    }
+
+    private int createCenterVertex(Vector3fWithEquality a, Vector3fWithEquality b,
+                                   HashMap<Vector3fWithEquality, Integer> vertexIndexMap,
+                                   ArrayList<Vector3fWithEquality> workingVertices) {
+        float x = (a.getX() + b.getX()) / 2f;
+        float y = (a.getY() + b.getY()) / 2f;
+        float z = (a.getZ() + b.getZ()) / 2f;
+        Vector3fWithEquality vertex = new Vector3fWithEquality(x, y, z);
+
+        if (vertexIndexMap.containsKey(vertex)) {
+            return vertexIndexMap.get(vertex);
+        } else {
+            int index = workingVertices.size();
+            workingVertices.add(vertex);
+            return index;
+        }
     }
 
     private int[] toIntArray(final ArrayList<Integer> workingIndices) {
