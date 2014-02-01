@@ -66,7 +66,7 @@ public class IcoSphere extends AbstractDrawable {
     }
 
     private void init(){
-        ArrayList<Vector3f> workingVertices = initVertices();
+        ArrayList<Vector3fWithEquality> workingVertices = initVertices();
         ArrayList<Integer> workingIndices = new ArrayList<Integer>();
         for (int i = 0; i < icoIndices.length; i++){
             workingIndices.add(icoIndices[i]);
@@ -81,7 +81,7 @@ public class IcoSphere extends AbstractDrawable {
     }
 
     private ArrayList<Integer> subdivide(
-            final ArrayList<Vector3f> workingVertices,
+            final ArrayList<Vector3fWithEquality> workingVertices,
             final ArrayList<Integer> workingIndices) {
         ArrayList<Integer> newWorkingIndices
                 = new ArrayList<Integer>();
@@ -92,12 +92,12 @@ public class IcoSphere extends AbstractDrawable {
             int indexB = workingIndices.get(i + 1);
             int indexC = workingIndices.get(i + 2);
 
-            Vector3f a = workingVertices.get(indexA);
-            Vector3f b = workingVertices.get(indexB);
-            Vector3f c = workingVertices.get(indexC);
+            Vector3fWithEquality a = workingVertices.get(indexA);
+            Vector3fWithEquality b = workingVertices.get(indexB);
+            Vector3fWithEquality c = workingVertices.get(indexC);
 
-            Vector3f center =
-                    new Vector3f(
+            Vector3fWithEquality center =
+                    new Vector3fWithEquality(
                             (a.getX() + b.getX() + c.getX()) / 3f,
                             (a.getY() + b.getY() + c.getY()) / 3f,
                             (a.getZ() + b.getZ() + c.getZ()) / 3f);
@@ -149,24 +149,19 @@ public class IcoSphere extends AbstractDrawable {
         return this.verticePoints;
     }
 
-    protected ArrayList<Vector3f> initVertices() {
-        ArrayList<Vector3f> points = new ArrayList<Vector3f>();
+    protected ArrayList<Vector3fWithEquality> initVertices() {
+        ArrayList<Vector3fWithEquality> points = new ArrayList<Vector3fWithEquality>();
         points.ensureCapacity(icoPoints.length / 3);
         for(int i = 0; i < icoPoints.length; i++){
-            Vector3f clone = cloneVector3f(icoPoints[i]);
-            points.add(clone);
+            points.add(new Vector3fWithEquality(icoPoints[i]));
         }
         return points;
     }
 
-    private Vector3f cloneVector3f(final Vector3f icoPoint) {
-        return new Vector3f(icoPoint.getX(), icoPoint.getY(), icoPoint.getZ());
-    }
-
-    private float[] fitOnRadius(final ArrayList<Vector3f> points){
+    private float[] fitOnRadius(final ArrayList<Vector3fWithEquality> points){
         float[] array = new float[points.size() * 4];
         for(int i = 0; i < points.size(); i++){
-            Vector3f currentPoint = points.get(i);
+            Vector3f currentPoint = points.get(i).createVector();
             float scale = this.radius / currentPoint.length();
             currentPoint.scale(this.radius / (float)currentPoint.length());
 
