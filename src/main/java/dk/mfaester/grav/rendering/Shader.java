@@ -1,4 +1,4 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.rendering;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;

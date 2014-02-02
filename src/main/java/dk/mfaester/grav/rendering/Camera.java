@@ -1,5 +1,6 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.rendering;
 
+import dk.mfaester.grav.MathUtil;
 import org.lwjgl.util.vector.Matrix;
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;

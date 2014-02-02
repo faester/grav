@@ -1,21 +1,18 @@
 package dk.mfaester.grav;
 
+import dk.mfaester.grav.rendering.*;
 import dk.mfaester.grav.shapes.IcoSphere;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.nio.FloatBuffer;
 
-public class Program {
-    private ShaderProgram shaderProgram;
+public class Program  extends OpenGlBaseObject {
+    private final ShaderDefinitions shaderDefinitions;
     private FloatBuffer matrix44Buffer = BufferUtils.createFloatBuffer(16);
-    private int projectionMatrixLocation;
-    private int viewMatrixLocation;
-    private int modelMatrixLocation;
     private Camera camera;
     private KeyboardHandler keyboardHandler;
 
@@ -29,13 +26,15 @@ public class Program {
     private final int WIDTH = 800;
     private final int HEIGHT = 800;
 
+    private ShaderLoader shaderLoader = new DefaultShaderLoader();
+
     private dk.mfaester.grav.shapes.Drawable[] drawables;
 
     public Program() {
         // Initialize OpenGL (Display)
         this.setupOpenGL();
 
-        this.loadShaders();
+        this.shaderDefinitions = shaderLoader.loadShaders();
 
         this.drawables = createDrawables();
 
@@ -59,24 +58,6 @@ public class Program {
 
         // Destroy OpenGL (Display)
         this.destroyOpenGL(drawables);
-    }
-
-    private void loadShaders() {
-        Shader fragmentShader = Shader.loadFragmentShader("C:/workdirs/grav/src/main/resources/fragment.glsl");
-        Shader vertexShader = Shader.loadVertexShader("C:/workdirs/grav/src/main/resources/vertex.glsl");
-        vertexShader.addInputAttribute("in_Position");
-        vertexShader.addInputAttribute("in_Color");
-        vertexShader.addInputAttribute("in_TextureCoord");
-        this.shaderProgram = new ShaderProgram();
-        this.shaderProgram.AttachShader(vertexShader);
-        this.shaderProgram.AttachShader(fragmentShader);
-        this.shaderProgram.LinkAndValidateProgram();
-
-        // Get matrices uniform locations
-        projectionMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "projectionMatrix");
-        viewMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "viewMatrix");
-        modelMatrixLocation = GL20.glGetUniformLocation(this.shaderProgram.getGlProgramId(), "modelMatrix");
-        exitOnGLError("loadShaders()");
     }
 
     private dk.mfaester.grav.shapes.Drawable[] createDrawables() {
@@ -118,7 +99,7 @@ public class Program {
         // Map the internal OpenGL coordinate system to the entire screen
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
 
-        this.exitOnGLError("Error in setupOpenGL");
+        this.throwOnGlError("Error in setupOpenGL");
     }
 
     public void bindDrawables(dk.mfaester.grav.shapes.Drawable[] drawables) {
@@ -130,7 +111,7 @@ public class Program {
             binder.Bind(drawable);
         }
 
-        this.exitOnGLError("Error in bindDrawables");
+        this.throwOnGlError("Error in bindDrawables");
     }
 
     public void loopCycle(dk.mfaester.grav.shapes.Drawable[] drawables) {
@@ -144,7 +125,7 @@ public class Program {
             prepareProjection(drawable);
             // Bind to the VAO that has all the information about the quad vertices
 
-            GL20.glUseProgram(this.shaderProgram.getGlProgramId());
+            GL20.glUseProgram(this.shaderDefinitions.getShaderProgram().getGlProgramId());
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
             GL20.glEnableVertexAttribArray(1);
@@ -164,7 +145,7 @@ public class Program {
         }
 
 
-        this.exitOnGLError("Error in loopCycle");
+        this.throwOnGlError("Error in loopCycle");
     }
 
     private void prepareProjection(dk.mfaester.grav.shapes.Drawable drawable) {
@@ -187,20 +168,20 @@ public class Program {
         Matrix4f.rotate(MathUtil.degreesToRadians(modelAngle.x), new Vector3f(1, 0, 0),
                 modelMatrix, modelMatrix);
 // Upload matrices to the uniform variables
-        GL20.glUseProgram(shaderProgram.getGlProgramId());
+        GL20.glUseProgram(this.shaderDefinitions.getShaderProgram().getGlProgramId());
         this.camera.getProjectionMatrix().store(matrix44Buffer);
         matrix44Buffer.flip();
 
         /// http://lwjgl.org/wiki/index.php?title=The_Quad_with_Projection,_View_and_Model_matrices
-        GL20.glUniformMatrix4(projectionMatrixLocation, false, matrix44Buffer);
+        GL20.glUniformMatrix4(this.shaderDefinitions.getProjectionMatrixLocation(), false, matrix44Buffer);
         viewMatrix.store(matrix44Buffer);
         matrix44Buffer.flip();
-        GL20.glUniformMatrix4(viewMatrixLocation, false, matrix44Buffer);
+        GL20.glUniformMatrix4(this.shaderDefinitions.getViewMatrixLocation(), false, matrix44Buffer);
         modelMatrix.store(matrix44Buffer);
         matrix44Buffer.flip();
-        GL20.glUniformMatrix4(modelMatrixLocation, false, matrix44Buffer);
+        GL20.glUniformMatrix4(this.shaderDefinitions.getModelMatrixLocation(), false, matrix44Buffer);
         GL20.glUseProgram(0);
-        this.exitOnGLError("logicCycle");
+        this.throwOnGlError("logicCycle");
     }
 
     public void destroyOpenGL(dk.mfaester.grav.shapes.Drawable[] drawables) {
@@ -223,15 +204,4 @@ public class Program {
         Display.destroy();
     }
 
-    public void exitOnGLError(String errorMessage) {
-        int errorValue = GL11.glGetError();
-
-        if (errorValue != GL11.GL_NO_ERROR) {
-            String errorString = GLU.gluErrorString(errorValue);
-            System.err.println("ERROR - OpenGL - " + errorMessage + ": " + errorString);
-
-            if (Display.isCreated()) Display.destroy();
-            System.exit(-1);
-        }
-    }
 }
