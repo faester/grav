@@ -3,9 +3,7 @@ package dk.mfaester.grav.rendering;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Shader {
@@ -19,23 +17,27 @@ public class Shader {
         return this.shaderID;
     }
 
-    public static Shader loadVertexShader(String filename) {
+    public static Shader loadVertexShader(InputStream filename) {
         Shader shaderProgram = new Shader();
         shaderProgram.loadShader(filename, GL20.GL_VERTEX_SHADER);
         return shaderProgram;
     }
 
-    public static Shader loadFragmentShader(String filename) {
+    public static Shader loadFragmentShader(InputStream filename) {
         Shader shaderProgram = new Shader();
         shaderProgram.loadShader(filename, GL20.GL_FRAGMENT_SHADER);
         return shaderProgram;
     }
 
-    private void loadShader(String filename, int type) {
+    private void loadShader(InputStream inputStream, int type) {
+        if(inputStream == null){
+            throw new NullPointerException("inputStream");
+        }
+
         StringBuilder shaderSource = new StringBuilder();
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
                 shaderSource.append(line).append("\n");
@@ -53,7 +55,7 @@ public class Shader {
 
         if (GL20.glGetShader(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
             System.err.println("Could not compile shader.");
-            throw new RuntimeException("Could not compile shader in file " + filename);
+            throw new RuntimeException("Could not compile shader in file " + inputStream);
         }
     }
 

@@ -2,6 +2,8 @@ package dk.mfaester.grav.rendering;
 
 import org.lwjgl.opengl.GL20;
 
+import java.io.InputStream;
+
 public class DefaultShaderLoader extends OpenGlBaseObject implements ShaderLoader
 {
     private class ShaderDefinition implements  ShaderDefinitions {
@@ -40,8 +42,10 @@ public class DefaultShaderLoader extends OpenGlBaseObject implements ShaderLoade
     }
 
     public ShaderDefinitions loadShaders() {
-        Shader fragmentShader = Shader.loadFragmentShader("C:/workdirs/grav/src/main/resources/dk/mfaester/grav/fragment.glsl");
-        Shader vertexShader = Shader.loadVertexShader("C:/workdirs/grav/src/main/resources/dk/mfaester/grav/vertex.glsl");
+        InputStream fragmentShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/fragment.glsl");
+        InputStream vertexShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/vertex.glsl");
+        Shader fragmentShader = Shader.loadFragmentShader(fragmentShaderStream);
+        Shader vertexShader = Shader.loadVertexShader(vertexShaderStream);
         vertexShader.addInputAttribute("in_Position");
         vertexShader.addInputAttribute("in_Color");
         vertexShader.addInputAttribute("in_TextureCoord");
