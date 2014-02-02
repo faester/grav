@@ -1,17 +1,17 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.shapes;
 
+import dk.mfaester.grav.shapes.AbstractDrawable;
 import org.lwjgl.util.vector.Vector4f;
 
-public class Gnyf extends AbstractDrawable {
-    final static Vector4f color = new Vector4f(0f, 0.8f, 0f, 0.5f);
+public class Gnaf extends AbstractDrawable {
+    final Vector4f color = new Vector4f(0.8f, 0f, 0f, 0.5f);
 
     @Override
     protected float[] createVertices() {
         final float[] vertices = {
-                // Left bottom triangle
-                -0.5f, 0.5f, 0f, 1f,
-                -0.5f, -0.5f, 0f, 1f,
                 0.5f, -0.5f, 0f, 1f,
+                0.5f, 0.5f, 0f, 1f,
+                -0.5f, 0.5f, 0f, 1f,
         };
         return vertices;
     }
@@ -20,8 +20,8 @@ public class Gnyf extends AbstractDrawable {
     protected float[] createColors() {
         final float[] colors = {
                 1f, 0f, 0f, 1f,
-                0.5f, 0f, 0f, 1f,
-                0f, 0f, 0f, 1f,
+                0f, 1f, 0f, 1f,
+                0f, 0f, 1f, 1f,
         };
         return colors;
     }
@@ -34,3 +34,4 @@ public class Gnyf extends AbstractDrawable {
         return indices;
     }
 }
+

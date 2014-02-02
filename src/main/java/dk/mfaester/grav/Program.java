@@ -1,8 +1,8 @@
 package dk.mfaester.grav;
 
+import dk.mfaester.grav.shapes.IcoSphere;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
@@ -29,7 +29,7 @@ public class Program {
     private final int WIDTH = 800;
     private final int HEIGHT = 800;
 
-    private Drawable[] drawables;
+    private dk.mfaester.grav.shapes.Drawable[] drawables;
 
     public Program() {
         // Initialize OpenGL (Display)
@@ -79,8 +79,8 @@ public class Program {
         exitOnGLError("loadShaders()");
     }
 
-    private Drawable[] createDrawables() {
-        Drawable[] drawables = {
+    private dk.mfaester.grav.shapes.Drawable[] createDrawables() {
+        dk.mfaester.grav.shapes.Drawable[] drawables = {
 //                new Gnyf(),
 //                new Gnaf(),
 //                new Box(),
@@ -121,26 +121,26 @@ public class Program {
         this.exitOnGLError("Error in setupOpenGL");
     }
 
-    public void bindDrawables(Drawable[] drawables) {
+    public void bindDrawables(dk.mfaester.grav.shapes.Drawable[] drawables) {
         // Sending data to OpenGL requires the usage of (flipped) byte buffers
 
         DrawableToOpenGlVaoBinder binder = new DrawableToOpenGlVaoBinder();
 
-        for (Drawable drawable : drawables) {
+        for (dk.mfaester.grav.shapes.Drawable drawable : drawables) {
             binder.Bind(drawable);
         }
 
         this.exitOnGLError("Error in bindDrawables");
     }
 
-    public void loopCycle(Drawable[] drawables) {
+    public void loopCycle(dk.mfaester.grav.shapes.Drawable[] drawables) {
         render(drawables);
     }
 
-    private void render(Drawable[] drawables) {
+    private void render(dk.mfaester.grav.shapes.Drawable[] drawables) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-        for (Drawable drawable : drawables) {
+        for (dk.mfaester.grav.shapes.Drawable drawable : drawables) {
             prepareProjection(drawable);
             // Bind to the VAO that has all the information about the quad vertices
 
@@ -167,7 +167,7 @@ public class Program {
         this.exitOnGLError("Error in loopCycle");
     }
 
-    private void prepareProjection(Drawable drawable) {
+    private void prepareProjection(dk.mfaester.grav.shapes.Drawable drawable) {
 // Reset view and model matrices
         Matrix4f viewMatrix = new Matrix4f();
 
@@ -203,11 +203,11 @@ public class Program {
         this.exitOnGLError("logicCycle");
     }
 
-    public void destroyOpenGL(Drawable[] drawables) {
+    public void destroyOpenGL(dk.mfaester.grav.shapes.Drawable[] drawables) {
         // Disable the VBO index from the VAO attributes list
         GL20.glDisableVertexAttribArray(0);
 
-        for (Drawable drawable : drawables) {
+        for (dk.mfaester.grav.shapes.Drawable drawable : drawables) {
             // Delete the VBO
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
             GL15.glDeleteBuffers(drawable.getVertexBufferObjectId());

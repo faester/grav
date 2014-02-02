@@ -1,4 +1,4 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.shapes;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;

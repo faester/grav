@@ -1,11 +1,11 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.shapes;
 
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by Morten.Faester on 30-01-14.
  */
-public class Vector3fWithEquality {
+class Vector3fWithEquality {
 
     final float x, y, z;
 

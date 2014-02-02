@@ -2,15 +2,13 @@ package dk.mfaester.grav;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.glu.GLU;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class DrawableToOpenGlVaoBinder
 {
-    public void Bind(Drawable drawable){
+    public void Bind(dk.mfaester.grav.shapes.Drawable drawable){
         if (drawable.hasBeenSent()) { return; }
 
         prepareVerticeArrayObject(drawable);
@@ -25,13 +23,13 @@ public class DrawableToOpenGlVaoBinder
         drawable.setHasBeenSent(true);
     }
 
-    private void validate(Drawable drawable) {
+    private void validate(dk.mfaester.grav.shapes.Drawable drawable) {
         if (drawable.getColors().length != drawable.getVertices().length) {
             throw new IllegalArgumentException("The drawable has a different number of colors than vertices.");
         }
     }
 
-    private void bindColors(Drawable drawable) {
+    private void bindColors(dk.mfaester.grav.shapes.Drawable drawable) {
         float[] colors = drawable.getColors();
         FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.length);
         colorBuffer.put(colors);
@@ -43,7 +41,7 @@ public class DrawableToOpenGlVaoBinder
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
-    private void bindIndices(Drawable drawable) {
+    private void bindIndices(dk.mfaester.grav.shapes.Drawable drawable) {
         int[] indices = drawable.getIndices();
         IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
         indicesBuffer.put(indices);
@@ -59,7 +57,7 @@ public class DrawableToOpenGlVaoBinder
         drawable.setVertexIndexBufferObjectId(vboiId);
     }
 
-    private void bindVertices(Drawable drawable) {
+    private void bindVertices(dk.mfaester.grav.shapes.Drawable drawable) {
         float[] vertices = drawable.getVertices();
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices);
@@ -74,7 +72,7 @@ public class DrawableToOpenGlVaoBinder
         drawable.setVertexBufferObjectId(vertextBufferObjectId);
     }
 
-    private void prepareVerticeArrayObject(Drawable drawable) {
+    private void prepareVerticeArrayObject(dk.mfaester.grav.shapes.Drawable drawable) {
         drawable.setOpenGlId(GL30.glGenVertexArrays());
     }
 
@@ -82,7 +80,7 @@ public class DrawableToOpenGlVaoBinder
         GL30.glBindVertexArray(0);
     }
 
-    private void bindVerticeArrayObject(Drawable drawable) {
+    private void bindVerticeArrayObject(dk.mfaester.grav.shapes.Drawable drawable) {
         GL30.glBindVertexArray(drawable.getOpenGLVaoId());
     }
 }

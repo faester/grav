@@ -1,5 +1,6 @@
-package dk.mfaester.grav;
+package dk.mfaester.grav.shapes;
 
+import dk.mfaester.grav.shapes.AbstractDrawable;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
