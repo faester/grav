@@ -26,15 +26,15 @@ public interface Drawable {
      * Gets the vertices used to compose this object.
      * @return
      */
-    float[] getVertices();
-
-    float[] getColors();
+    Vertex[] getVertices();
 
     Vector3f getPosition();
 
     Vector3f getModelAngle();
 
     Vector3f getModelScale();
+
+    void setPosition(float x, float y, float z);
 
     /**
      * Gets the indices for the vertices to set.
@@ -57,12 +57,6 @@ public interface Drawable {
     void setOpenGlId(int value);
 
     /**
-     * Gets number of vertices in the Drawable.
-     * @return
-     */
-    int getGlVertexCount();
-
-    /**
      * Returns number of indices used to define the shape.
      * @return
      */
@@ -75,6 +69,8 @@ public interface Drawable {
     int getVertexBufferObjectId();
 
     int getVertexIndexBufferObjectId();
+
+    void setScale(float x, float y, float z);
 }
 
 

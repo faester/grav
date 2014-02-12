@@ -10,11 +10,15 @@ public abstract class AbstractDrawable implements Drawable {
     private boolean hasBeenSent;
     private int openGlVaoId;
 
-    private float[] vertices;
-    private float[] colors;
+    private Vertex[] vertices;
     private int[] indices;
 
     protected abstract float[] createColors();
+
+    @Override
+    public void setPosition(float x, float y, float z) {
+        this.position.set(x, y, z);
+    }
 
     private int vertexBufferObjectId;
     private int vertexBufferObjectIndexId;
@@ -53,19 +57,28 @@ public abstract class AbstractDrawable implements Drawable {
     }
 
     @Override
-    public float[] getColors() {
-        if (this.colors == null){
-            this.colors = createColors();
+    public void setScale(float x, float y, float z) {
+        if (this.scale == null) {
+            this.scale = new Vector3f(x, y, z);
+        } else {
+            this.scale.set(x, y, z);
         }
-        return this.colors;
     }
 
     @Override
-    public float[] getVertices() {
-        if (this.vertices == null){
-            this.vertices= createVertices();
+    public Vertex[] getVertices() {
+        float[] xyz = createVertices();
+        float[] rgb = createColors();
+
+        this.vertices = new Vertex[xyz.length / 3];
+
+        for(int i = 0; i < this.vertices.length; i++){
+            this.vertices[i] = new Vertex()
+                    .setXYZ(xyz[i * 3], xyz[i * 3 + 1], xyz[i * 3 + 2])
+                    .setRGB(rgb[i * 3], rgb[i * 3 + 1], rgb[i * 3 + 2]);
         }
-        return vertices;
+
+        return this.vertices;
     }
 
     @Override
@@ -79,11 +92,6 @@ public abstract class AbstractDrawable implements Drawable {
     @Override
     public int getGlVerticeFormat() {
         return GL11.GL_TRIANGLES;
-    }
-
-    @Override
-    public int getGlVertexCount() {
-        return this.vertices.length;
     }
 
     @Override

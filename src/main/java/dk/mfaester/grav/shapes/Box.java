@@ -16,35 +16,32 @@ public class Box extends AbstractDrawable {
         final float x = .25f, y = .25f, z = .25f;
 
         final float[] vertices = {
-                -x, -y, -z, 1f, // 0
-                -x, +y, -z, 1f, // 1
-                +x, +y, -z, 1f, // 2
-                +x, -y, -z, 1f, // 3
-                -x, -y, +z, 1f, // 4
-                -x, +y, +z, 1f, // 5
-                +x, +y, +z, 1f, // 6
-                +x, -y, +z, 1f, // 7
+                -x, -y, -z, // 0
+                -x, +y, -z, // 1
+                +x, +y, -z, // 2
+                +x, -y, -z, // 3
+                -x, -y, +z, // 4
+                -x, +y, +z, // 5
+                +x, +y, +z, // 6
+                +x, -y, +z, // 7
         };
         return vertices;
     }
 
     @Override
     protected float[] createColors() {
-        float c = 0.2f;
         final float[] vertices = {
-                1f, 0f, 0f, c,
-                1f, 0f, 1f, c,
-                1f, 1f, 0f, c,
-                1f, 1f, 1f, c,
-                0f, 0f, 0f, c,
-                0f, 0f, 1f, c,
-                0f, 1f, 0f, c,
-                0f, 1f, 1f, c,
+                1f, 0f, 0f,
+                1f, 0f, 1f,
+                1f, 1f, 0f,
+                1f, 1f, 1f,
+                0f, 0f, 0f,
+                0f, 0f, 1f,
+                0f, 1f, 0f,
+                0f, 1f, 1f,
         };
         return vertices;
     }
-
-
 
     @Override
     protected int[] createIndices() {

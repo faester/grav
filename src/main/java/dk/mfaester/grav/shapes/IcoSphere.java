@@ -57,11 +57,10 @@ public class IcoSphere extends AbstractDrawable {
     private int[] indices;
     private float[] verticePoints;
 
-    private final float radius;
     private final int depth;
 
     public IcoSphere(float radius, int depth){
-        this.radius = radius;
+        super.setScale(radius, radius, radius);
         this.depth = depth;
         init();
     }
@@ -160,9 +159,15 @@ public class IcoSphere extends AbstractDrawable {
 
     @Override
     protected float[] createColors() {
+        float[] colorBase = {
+                0.3f, 0.7f, 0.8f,
+                0.8f, 0.3f, 0.3f,
+                0.3f, 0.3f, 0.8f,
+                0.3f, 0.3f, 0.3f,
+        };
         float[] colors = new float[verticePoints.length];
         for(int i = 0; i < verticePoints.length; i++){
-            colors[i] = (i % 7) % 2;
+            colors[i] = colorBase[i % colorBase.length];
         }
         return colors;
     }
@@ -182,17 +187,15 @@ public class IcoSphere extends AbstractDrawable {
     }
 
     private float[] fitOnRadius(final ArrayList<Vector3fWithEquality> points){
-        float[] array = new float[points.size() * 4];
+        float[] array = new float[points.size() * 3];
         for(int i = 0; i < points.size(); i++){
             Vector3f currentPoint = points.get(i).createVector();
-            float scale = this.radius / currentPoint.length();
-            currentPoint.scale(this.radius / (float)currentPoint.length());
+            currentPoint.scale(1f / (float)currentPoint.length());
 
-            int arrayOffset = i * 4;
+            int arrayOffset = i * 3;
             array[arrayOffset] = currentPoint.getX();
             array[arrayOffset + 1] = currentPoint.getY();
             array[arrayOffset + 2] = currentPoint.getZ();
-            array[arrayOffset + 3] = 1f;
         }
         return array;
     }

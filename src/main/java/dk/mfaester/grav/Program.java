@@ -1,7 +1,8 @@
 package dk.mfaester.grav;
 
 import dk.mfaester.grav.rendering.*;
-import dk.mfaester.grav.shapes.IcoSphere;
+import dk.mfaester.grav.shapes.*;
+import dk.mfaester.grav.shapes.Drawable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
@@ -23,8 +24,8 @@ public class Program  extends OpenGlBaseObject {
 
     // Setup variables
     private final String WINDOW_TITLE = "The Quad: glDrawArrays";
-    private final int WIDTH = 800;
-    private final int HEIGHT = 800;
+    private final int WIDTH = 1200;
+    private final int HEIGHT = 900;
 
     private ShaderLoader shaderLoader = new DefaultShaderLoader();
 
@@ -60,12 +61,18 @@ public class Program  extends OpenGlBaseObject {
         this.destroyOpenGL(drawables);
     }
 
-    private dk.mfaester.grav.shapes.Drawable[] createDrawables() {
+    private Drawable[] createDrawables() {
+        Drawable icoSphere0 = new IcoSphere(1f, 3);
+        Drawable icoSphere1 = new IcoSphere(0.5f, 3);
+        Drawable icoSphere2 = new IcoSphere(0.5f, 3);
+        Drawable box = new Box();
+        box.setScale(1.5f, 1.5f, 1.5f);
+
+        icoSphere1.setPosition(0.5f, 0.5f, 0);
+        icoSphere2.setPosition(-1f, 1f, 0);
+
         dk.mfaester.grav.shapes.Drawable[] drawables = {
-//                new Gnyf(),
-//                new Gnaf(),
-//                new Box(),
-                new IcoSphere(1f, 6),
+            icoSphere0, icoSphere1, icoSphere2, box
         };
 
         return drawables;
@@ -129,7 +136,6 @@ public class Program  extends OpenGlBaseObject {
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
             GL20.glEnableVertexAttribArray(1);
-            GL20.glEnableVertexAttribArray(2);
 
             // Bind to element index array
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
