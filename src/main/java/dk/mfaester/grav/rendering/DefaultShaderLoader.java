@@ -42,8 +42,8 @@ public class DefaultShaderLoader extends OpenGlBaseObject implements ShaderLoade
     }
 
     public ShaderDefinitions loadShaders() {
-        InputStream fragmentShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/fragment.glsl");
-        InputStream vertexShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/vertex.glsl");
+        InputStream fragmentShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/shaders/fragment.glsl");
+        InputStream vertexShaderStream = getClass().getResourceAsStream("/dk/mfaester/grav/shaders/vertex.glsl");
         Shader fragmentShader = Shader.loadFragmentShader(fragmentShaderStream);
         Shader vertexShader = Shader.loadVertexShader(vertexShaderStream);
         vertexShader.addInputAttribute("in_Position");

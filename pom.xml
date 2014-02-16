@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <natives.version>0.0.6</natives.version>
-        <lwjgl.version>2.8.2</lwjgl.version>
+        <lwjgl.version>2.8.4</lwjgl.version>
         <slick.version>274</slick.version>
         <junit.version>4.10</junit.version>
     </properties>
@@ -45,13 +45,13 @@
             <artifactId>lwjgl_util</artifactId>
             <version>${lwjgl.version}</version>
         </dependency>
-        <!--       <dependency>
-                   <groupId>slick</groupId>
-                   <artifactId>slick</artifactId>
-                   <version>${slick.version}</version>
-
-    </dependency>
-    -->
+        <!--
+        <dependency>
+            <groupId>slick</groupId>
+            <artifactId>slick</artifactId>
+            <version>${slick.version}</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>java3d</groupId>
             <artifactId>vecmath</artifactId>
@@ -103,9 +103,9 @@
                 <configuration>
                     <mainClass>dk.mfaester.grav.Program</mainClass>
                     <arguments>
-<!--                        <argument>foo</argument>
-                        <argument>bar</argument>
-                        -->
+                        <!--                        <argument>foo</argument>
+                                                <argument>bar</argument>
+                                                -->
                     </arguments>
                 </configuration>
             </plugin>

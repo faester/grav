@@ -1,2 +1,2 @@
 set MAVEN_OPTS="-Djava.library.path=target/natives"   
-mvn compile exec:java
+mvn compile exec:java -e

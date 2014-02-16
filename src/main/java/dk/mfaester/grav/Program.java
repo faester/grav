@@ -9,6 +9,10 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class Program  extends OpenGlBaseObject {
@@ -16,6 +20,7 @@ public class Program  extends OpenGlBaseObject {
     private FloatBuffer matrix44Buffer = BufferUtils.createFloatBuffer(16);
     private Camera camera;
     private KeyboardHandler keyboardHandler;
+    private Texture texture0;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -24,8 +29,8 @@ public class Program  extends OpenGlBaseObject {
 
     // Setup variables
     private final String WINDOW_TITLE = "The Quad: glDrawArrays";
-    private final int WIDTH = 1200;
-    private final int HEIGHT = 900;
+    private final int WIDTH = 800;
+    private final int HEIGHT = 600;
 
     private ShaderLoader shaderLoader = new DefaultShaderLoader();
 
@@ -45,6 +50,8 @@ public class Program  extends OpenGlBaseObject {
 
         this.bindDrawables(drawables);
 
+        loadTextures();
+
         while (!Display.isCloseRequested()) {
             this.keyboardHandler.receiveInput();
 
@@ -61,18 +68,24 @@ public class Program  extends OpenGlBaseObject {
         this.destroyOpenGL(drawables);
     }
 
+    private void loadTextures() {
+        texture0 = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/alienskin21.png"));
+
+    }
+
     private Drawable[] createDrawables() {
         Drawable icoSphere0 = new IcoSphere(1f, 3);
         Drawable icoSphere1 = new IcoSphere(0.5f, 3);
         Drawable icoSphere2 = new IcoSphere(0.5f, 3);
         Drawable box = new Box();
-        box.setScale(1.5f, 1.5f, 1.5f);
+        box.setScale(0.25f, 0.25f, 0.25f);
 
         icoSphere1.setPosition(0.5f, 0.5f, 0);
         icoSphere2.setPosition(-1f, 1f, 0);
 
         dk.mfaester.grav.shapes.Drawable[] drawables = {
-            icoSphere0, icoSphere1, icoSphere2, box
+            //icoSphere0, icoSphere1, icoSphere2,
+                box
         };
 
         return drawables;
@@ -133,9 +146,13 @@ public class Program  extends OpenGlBaseObject {
             // Bind to the VAO that has all the information about the quad vertices
 
             GL20.glUseProgram(this.shaderDefinitions.getShaderProgram().getGlProgramId());
+            GL13.glActiveTexture(Texture.getTextureUnit());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture0.getTextureId());
+
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
             GL20.glEnableVertexAttribArray(1);
+            GL20.glEnableVertexAttribArray(2);
 
             // Bind to element index array
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, drawable.getVertexIndexBufferObjectId());
@@ -206,6 +223,8 @@ public class Program  extends OpenGlBaseObject {
             GL30.glBindVertexArray(0);
             GL30.glDeleteVertexArrays(drawable.getOpenGLVaoId());
         }
+
+        GL11.glDeleteTextures(texture0.getTextureId());
 
         Display.destroy();
     }

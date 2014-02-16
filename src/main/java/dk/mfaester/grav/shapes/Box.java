@@ -13,7 +13,7 @@ public class Box extends AbstractDrawable {
 
     @Override
     protected float[] createVertices() {
-        final float x = .25f, y = .25f, z = .25f;
+        final float x = 1f, y = 1f, z = 1f;
 
         final float[] vertices = {
                 -x, -y, -z, // 0
@@ -66,4 +66,24 @@ public class Box extends AbstractDrawable {
         };
         return indices;
     }
+
+
+    @Override
+    protected float[] createUvs(){
+        final float[] uvs = {
+                0f, 0f,
+                1f, 0f,
+                0f, 1f,
+                1f, 0f,
+
+                0f, 1f,
+                1f, 0f,
+                0f, 1f,
+                1f, 1f,
+
+        };
+        return uvs;
+    }
+
+
 }

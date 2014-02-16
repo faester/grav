@@ -204,4 +204,10 @@ public class IcoSphere extends AbstractDrawable {
     protected int[] createIndices() {
         return indices;
     }
+
+    @Override
+    protected float[] createUvs() {
+        throw new RuntimeException("Not implemented");
+        //return new float[0];
+    }
 }

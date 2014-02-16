@@ -40,11 +40,10 @@ public class DrawableToOpenGlVaoBinder
 
     private void bindVertices(dk.mfaester.grav.shapes.Drawable drawable) {
         Vertex[] vertices = drawable.getVertices();
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length * Vertex.elementCount);
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length * Vertex.stride);
 
         for (int i = 0; i < vertices.length; i++){
-            verticesBuffer.put(vertices[i].getXYZW());
-            verticesBuffer.put(vertices[i].getRGBA());
+            verticesBuffer.put(vertices[i].getElements());
         }
         verticesBuffer.flip();
 
@@ -52,8 +51,9 @@ public class DrawableToOpenGlVaoBinder
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertexBufferObjectId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
         // Put the VBO in the attributes list at index 0
-        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, Vertex.sizeInBytes, 0);
-        GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Vertex.sizeInBytes, Vertex.elementBytes * 4);
+        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, Vertex.stride, 0);
+        GL20.glVertexAttribPointer(1, 4, GL11.GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
+        GL20.glVertexAttribPointer(2, 4, GL11.GL_FLOAT, false, Vertex.stride, Vertex.textureByteOffset);
         // Deselect (bind to 0) the VBO
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         drawable.setVertexBufferObjectId(vertexBufferObjectId);

@@ -69,17 +69,21 @@ public abstract class AbstractDrawable implements Drawable {
     public Vertex[] getVertices() {
         float[] xyz = createVertices();
         float[] rgb = createColors();
+        float[] uv = createUvs();
 
         this.vertices = new Vertex[xyz.length / 3];
 
         for(int i = 0; i < this.vertices.length; i++){
             this.vertices[i] = new Vertex()
                     .setXYZ(xyz[i * 3], xyz[i * 3 + 1], xyz[i * 3 + 2])
-                    .setRGB(rgb[i * 3], rgb[i * 3 + 1], rgb[i * 3 + 2]);
+                    .setRGB(rgb[i * 3], rgb[i * 3 + 1], rgb[i * 3 + 2])
+                    .setUV(uv[i * 2], uv[i * 2 + 1]);
         }
 
         return this.vertices;
     }
+
+    protected abstract float[] createUvs();
 
     @Override
     public int[] getIndices() {
