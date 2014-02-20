@@ -135,9 +135,7 @@ public class IcoSphere extends AbstractDrawable {
         float x = (a.getX() + b.getX()) / 2f;
         float y = (a.getY() + b.getY()) / 2f;
         float z = (a.getZ() + b.getZ()) / 2f;
-        float u = (a.getU() + b.getU()) / 2f;
-        float v = (a.getV() + b.getV()) / 2f;
-        Vector3fWithEquality vertex = new Vector3fWithEquality(x, y, z, u, v);
+        Vector3fWithEquality vertex = new Vector3fWithEquality(x, y, z);
 
         if (vertexIndexMap.containsKey(vertex)) {
             return vertexIndexMap.get(vertex);
@@ -185,15 +183,7 @@ public class IcoSphere extends AbstractDrawable {
         ArrayList<Vector3fWithEquality> points = new ArrayList<Vector3fWithEquality>();
         points.ensureCapacity(icoPoints.length);
         for(int i = 0; i < icoPoints.length; i++){
-            Vector3f vec = icoPoints[i];
-            Vector3f p = new Vector3f();
-            vec.normalise(p);
-
-            double u = .5 + (Math.atan2(p.getZ(), p.getX()) / (2 * Math.PI));
-            double v = .5 - Math.asin(p.getY()) / Math.PI;
-
-            System.out.println(String.format("(%.5f, %.5f)", u, v));
-            points.add(new Vector3fWithEquality(icoPoints[i], (float)u, (float)v));
+            points.add(new Vector3fWithEquality(icoPoints[i]));
         }
         return points;
     }
@@ -218,8 +208,14 @@ public class IcoSphere extends AbstractDrawable {
         for(int i = 0; i < points.size(); i++){
             Vector3fWithEquality currentPoint = points.get(i);
             int arrayOffset = i * 2;
-            array[arrayOffset] = currentPoint.getU();
-            array[arrayOffset + 1] = currentPoint.getV();
+            Vector3f p = new Vector3f();
+            currentPoint.createVector().normalise(p);
+
+            double u = .5 + (Math.atan2(p.getZ(), p.getX()) / (2 * Math.PI));
+            double v = .5 - Math.asin(p.getY()) / Math.PI;
+
+            array[arrayOffset] = (float)u;
+            array[arrayOffset + 1] = (float)v;
         }
         return array;
     }

@@ -7,30 +7,16 @@ import org.lwjgl.util.vector.Vector3f;
  */
 class Vector3fWithEquality {
 
-    final float x, y, z, u, v;
+    final float x, y, z;
 
-    public Vector3fWithEquality(float x, float y, float z, float u, float v) {
+    public Vector3fWithEquality(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.u = u;
-        this.v = v;
     }
 
-    public Vector3fWithEquality(float x, float y, float z) {
-        this(x, y, z, 0, 0);
-    }
-
-    public Vector3fWithEquality(Vector3f vector, float u, float v) {
-        this(vector.getX(), vector.getY(), vector.getZ(), u, v);
-    }
-
-    public Vector3fWithEquality(Vector3fWithEquality icoPoint) {
-        this.x = icoPoint.getX();
-        this.y = icoPoint.getY();
-        this.z = icoPoint.getZ();
-        this.u = icoPoint.getU();
-        this.v = icoPoint.getV();
+    public Vector3fWithEquality(Vector3f vector) {
+        this(vector.getX(), vector.getY(), vector.getZ());
     }
 
     @Override
@@ -69,13 +55,5 @@ class Vector3fWithEquality {
 
     public float getZ() {
         return z;
-    }
-
-    public float getU() {
-        return u;
-    }
-
-    public float getV() {
-        return v;
     }
 }

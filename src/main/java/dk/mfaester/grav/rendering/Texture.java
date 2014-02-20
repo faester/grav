@@ -17,31 +17,31 @@ import java.nio.ByteBuffer;
 public class Texture {
     private final int textureId;
 
-    private Texture(int textureId){
+    private Texture(int textureId) {
         this.textureId = textureId;
     }
 
-    public static Texture load(InputStream stream){
+    public static Texture load(InputStream stream) {
         final int mask = 0x000000FF;
         ByteBuffer byteBuffer;
         BufferedImage texture0;
         try {
             texture0 = ImageIO.read(stream);
-            if (texture0.getType() != BufferedImage.TYPE_4BYTE_ABGR){
+            if (texture0.getType() != BufferedImage.TYPE_4BYTE_ABGR) {
                 throw new RuntimeException("Wrong image type " + texture0.getType());
             }
             byteBuffer = BufferUtils.createByteBuffer(texture0.getWidth() * texture0.getHeight() * 4);
-            for (int x = 0; x < texture0.getWidth(); x++){
-                for(int y = 0; y < texture0.getHeight(); y++){
+            for (int y = 0; y < texture0.getHeight(); y++) {
+                for (int x = texture0.getWidth() - 1; x >= 0; x--) {
                     int p = texture0.getRGB(x, y);
                     int alpha = (p >> 24) & mask;
                     int b = (p >> 0) & mask;
                     int g = (p >> 8) & mask;
                     int r = (p >> 16) & mask;
-                    byteBuffer.put((byte)r);
-                    byteBuffer.put((byte)g);
-                    byteBuffer.put((byte)b);
-                    byteBuffer.put((byte)alpha);
+                    byteBuffer.put((byte) r);
+                    byteBuffer.put((byte) g);
+                    byteBuffer.put((byte) b);
+                    byteBuffer.put((byte) alpha);
                 }
             }
 
