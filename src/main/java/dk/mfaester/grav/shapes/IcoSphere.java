@@ -58,6 +58,7 @@ public class IcoSphere extends AbstractDrawable {
     private float[] verticePoints;
 
     private final int depth;
+    private float[] uvArray;
 
     public IcoSphere(float radius, int depth){
         super.setScale(radius, radius, radius);
@@ -84,6 +85,7 @@ public class IcoSphere extends AbstractDrawable {
 
         this.indices = toIntArray(workingIndices);
         this.verticePoints = fitOnRadius(workingVertices);
+        this.uvArray = getUVs(workingVertices);
     }
 
     private ArrayList<Integer> subdivide(
@@ -133,7 +135,9 @@ public class IcoSphere extends AbstractDrawable {
         float x = (a.getX() + b.getX()) / 2f;
         float y = (a.getY() + b.getY()) / 2f;
         float z = (a.getZ() + b.getZ()) / 2f;
-        Vector3fWithEquality vertex = new Vector3fWithEquality(x, y, z);
+        float u = (a.getU() + b.getU()) / 2f;
+        float v = (a.getV() + b.getV()) / 2f;
+        Vector3fWithEquality vertex = new Vector3fWithEquality(x, y, z, u, v);
 
         if (vertexIndexMap.containsKey(vertex)) {
             return vertexIndexMap.get(vertex);
@@ -179,9 +183,17 @@ public class IcoSphere extends AbstractDrawable {
 
     protected ArrayList<Vector3fWithEquality> initVertices() {
         ArrayList<Vector3fWithEquality> points = new ArrayList<Vector3fWithEquality>();
-        points.ensureCapacity(icoPoints.length / 3);
+        points.ensureCapacity(icoPoints.length);
         for(int i = 0; i < icoPoints.length; i++){
-            points.add(new Vector3fWithEquality(icoPoints[i]));
+            Vector3f vec = icoPoints[i];
+            Vector3f p = new Vector3f();
+            vec.normalise(p);
+
+            double u = .5 + (Math.atan2(p.getZ(), p.getX()) / (2 * Math.PI));
+            double v = .5 - Math.asin(p.getY()) / Math.PI;
+
+            System.out.println(String.format("(%.5f, %.5f)", u, v));
+            points.add(new Vector3fWithEquality(icoPoints[i], (float)u, (float)v));
         }
         return points;
     }
@@ -200,6 +212,18 @@ public class IcoSphere extends AbstractDrawable {
         return array;
     }
 
+
+    private float[] getUVs(final ArrayList<Vector3fWithEquality> points){
+        float[] array = new float[points.size() * 2];
+        for(int i = 0; i < points.size(); i++){
+            Vector3fWithEquality currentPoint = points.get(i);
+            int arrayOffset = i * 2;
+            array[arrayOffset] = currentPoint.getU();
+            array[arrayOffset + 1] = currentPoint.getV();
+        }
+        return array;
+    }
+
     @Override
     protected int[] createIndices() {
         return indices;
@@ -207,7 +231,6 @@ public class IcoSphere extends AbstractDrawable {
 
     @Override
     protected float[] createUvs() {
-        throw new RuntimeException("Not implemented");
-        //return new float[0];
+        return uvArray;
     }
 }

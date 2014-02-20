@@ -69,12 +69,12 @@ public class Program  extends OpenGlBaseObject {
     }
 
     private void loadTextures() {
-        texture0 = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/alienskin21.png"));
+        texture0 = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/earth.png"));
 
     }
 
     private Drawable[] createDrawables() {
-        Drawable icoSphere0 = new IcoSphere(1f, 3);
+        Drawable icoSphere0 = new IcoSphere(1f, 5);
         Drawable icoSphere1 = new IcoSphere(0.5f, 3);
         Drawable icoSphere2 = new IcoSphere(0.5f, 3);
         Drawable box = new Box();
@@ -84,8 +84,8 @@ public class Program  extends OpenGlBaseObject {
         icoSphere2.setPosition(-1f, 1f, 0);
 
         dk.mfaester.grav.shapes.Drawable[] drawables = {
-            //icoSphere0, icoSphere1, icoSphere2,
-                box
+            icoSphere0 //, icoSphere1, icoSphere2,
+            //    box
         };
 
         return drawables;
