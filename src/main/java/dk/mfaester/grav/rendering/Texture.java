@@ -18,6 +18,7 @@ public class Texture {
     private final int textureId;
 
     private Texture(int textureId) {
+        System.out.println("Creating texture with id " + textureId);
         this.textureId = textureId;
     }
 

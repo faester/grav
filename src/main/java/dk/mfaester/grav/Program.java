@@ -9,10 +9,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class Program  extends OpenGlBaseObject {
@@ -20,7 +16,9 @@ public class Program  extends OpenGlBaseObject {
     private FloatBuffer matrix44Buffer = BufferUtils.createFloatBuffer(16);
     private Camera camera;
     private KeyboardHandler keyboardHandler;
-    private Texture texture0;
+    private Texture earthTexture;
+    private Texture alientSkin;
+    private Texture moonSurface;
 
     // Entry point for the application
     public static void main(String[] args) {
@@ -42,6 +40,8 @@ public class Program  extends OpenGlBaseObject {
 
         this.shaderDefinitions = shaderLoader.loadShaders();
 
+        this.loadTextures();
+
         this.drawables = createDrawables();
 
         this.camera = new Camera(WIDTH, HEIGHT);
@@ -49,8 +49,6 @@ public class Program  extends OpenGlBaseObject {
         this.keyboardHandler = new KeyboardHandler(this.camera);
 
         this.bindDrawables(drawables);
-
-        loadTextures();
 
         while (!Display.isCloseRequested()) {
             this.keyboardHandler.receiveInput();
@@ -69,8 +67,9 @@ public class Program  extends OpenGlBaseObject {
     }
 
     private void loadTextures() {
-        texture0 = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/earth.png"));
-
+        earthTexture = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/earth.png"));
+        alientSkin = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/alienskin21.png"));
+        moonSurface = Texture.load(getClass().getResourceAsStream("/dk/mfaester/grav/textures/moon-2k.png"));
     }
 
     private Drawable[] createDrawables() {
@@ -79,13 +78,18 @@ public class Program  extends OpenGlBaseObject {
         Drawable icoSphere2 = new IcoSphere(0.5f, 3);
         Drawable box = new Box();
         box.setScale(0.25f, 0.25f, 0.25f);
+        box.setPosition(2f, 0, 0);
+        icoSphere1.setPosition(3f, 3f, 3f);
+        icoSphere2.setPosition(3f, -3f, 0f);
 
-        icoSphere1.setPosition(0.5f, 0.5f, 0);
-        icoSphere2.setPosition(-1f, 1f, 0);
+        box.setTexture(alientSkin);
+        icoSphere0.setTexture(earthTexture);
+        icoSphere1.setTexture(alientSkin);
+        icoSphere2.setTexture(moonSurface);
 
         dk.mfaester.grav.shapes.Drawable[] drawables = {
-            icoSphere0 //, icoSphere1, icoSphere2,
-            //    box
+            icoSphere0 , icoSphere1, icoSphere2,
+            box
         };
 
         return drawables;
@@ -147,7 +151,11 @@ public class Program  extends OpenGlBaseObject {
 
             GL20.glUseProgram(this.shaderDefinitions.getShaderProgram().getGlProgramId());
             GL13.glActiveTexture(Texture.getTextureUnit());
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture0.getTextureId());
+            Texture texture = drawable.getTexture();
+            if(texture == null) {
+                texture = earthTexture;
+            }
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureId());
 
             GL30.glBindVertexArray(drawable.getOpenGLVaoId());
             GL20.glEnableVertexAttribArray(0);
@@ -224,7 +232,7 @@ public class Program  extends OpenGlBaseObject {
             GL30.glDeleteVertexArrays(drawable.getOpenGLVaoId());
         }
 
-        GL11.glDeleteTextures(texture0.getTextureId());
+        GL11.glDeleteTextures(earthTexture.getTextureId());
 
         Display.destroy();
     }

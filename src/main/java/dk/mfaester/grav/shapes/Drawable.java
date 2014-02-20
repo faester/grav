@@ -1,5 +1,6 @@
 package dk.mfaester.grav.shapes;
 
+import dk.mfaester.grav.rendering.Texture;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -71,6 +72,10 @@ public interface Drawable {
     int getVertexIndexBufferObjectId();
 
     void setScale(float x, float y, float z);
+
+    void setTexture(Texture texture);
+
+    Texture getTexture();
 }
 
 

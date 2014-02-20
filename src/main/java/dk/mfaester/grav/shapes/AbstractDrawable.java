@@ -1,5 +1,6 @@
 package dk.mfaester.grav.shapes;
 
+import dk.mfaester.grav.rendering.Texture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -12,6 +13,7 @@ public abstract class AbstractDrawable implements Drawable {
 
     private Vertex[] vertices;
     private int[] indices;
+    private Texture texture;
 
     protected abstract float[] createColors();
 
@@ -73,7 +75,7 @@ public abstract class AbstractDrawable implements Drawable {
 
         this.vertices = new Vertex[xyz.length / 3];
 
-        for(int i = 0; i < this.vertices.length; i++){
+        for (int i = 0; i < this.vertices.length; i++) {
             this.vertices[i] = new Vertex()
                     .setXYZ(xyz[i * 3], xyz[i * 3 + 1], xyz[i * 3 + 2])
                     .setRGB(rgb[i * 3], rgb[i * 3 + 1], rgb[i * 3 + 2])
@@ -87,10 +89,20 @@ public abstract class AbstractDrawable implements Drawable {
 
     @Override
     public int[] getIndices() {
-        if (this.indices == null){
+        if (this.indices == null) {
             this.indices = createIndices();
         }
         return indices;
+    }
+
+    @Override
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return this.texture;
     }
 
     @Override
